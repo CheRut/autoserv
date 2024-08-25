@@ -90,7 +90,7 @@ public class Car {
     /**
      * VIN-код автомобиля, уникальный идентификатор транспортного средства.
      */
-    @Column(unique = true)
+    @Column(unique = true,nullable = false)
     private String vin;
 
     /**

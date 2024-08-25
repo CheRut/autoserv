@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.antlr.v4.runtime.misc.NotNull;
 
 /**
  * Представляет сущность запчасти, связанной с автомобилем.
@@ -54,6 +55,8 @@ public class Part {
     /**
      * VIN-код автомобиля, к которому подходит запчасть.
      */
+
+    @Column(nullable = false)
     private String vin;
 
     /**

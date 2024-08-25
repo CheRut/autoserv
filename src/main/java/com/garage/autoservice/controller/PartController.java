@@ -1,16 +1,14 @@
 package com.garage.autoservice.controller;
 
 import com.garage.autoservice.dto.PartRequest;
-import com.garage.autoservice.entity.Car;
 import com.garage.autoservice.entity.Part;
-import com.garage.autoservice.repository.CarRepository;
 import com.garage.autoservice.repository.PartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.*;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -44,7 +42,7 @@ public class PartController {
      * @return созданная запчасть
      */
     @PostMapping
-    public Part createPart(@RequestBody PartRequest request) {
+    public Part createPart( @RequestBody PartRequest request) {
         Part part = new Part();
         part.setName(request.getName());
         part.setManufacturer(request.getManufacturer());

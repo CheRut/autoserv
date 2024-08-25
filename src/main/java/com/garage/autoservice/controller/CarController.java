@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -36,7 +37,7 @@ public class CarController {
      * @return созданный автомобиль
      * */
     @PostMapping
-    public ResponseEntity<Car> createCar(@RequestBody Car car) {
+    public ResponseEntity<Car> createCar(@Valid @RequestBody Car car) {
         Car savedCar = carRepository.save(car);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCar);
     }
@@ -49,7 +50,7 @@ public class CarController {
      * @return список созданных автомобилей
      */
     @PostMapping("/batch")
-    public ResponseEntity<List<Car>> createCars(@RequestBody List<Car> cars) {
+    public ResponseEntity<List<Car>> createCars(@Valid @RequestBody List<Car> cars) {
         List<Car> savedCars = carRepository.saveAll(cars);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCars);
     }
