@@ -23,9 +23,9 @@ public class RepairJobRepositoryTest {
     public void testSaveAndFindById() {
         RepairJob repairJob = new RepairJob();
         repairJob.setJobName("Oil Change");
-        repairJob.setIntervalInMileage(10000);
-        repairJob.setIntervalInHours(1000);
-        repairJob.setIntervalInDays(365);
+        repairJob.setIntervalInMileage(10000L);
+        repairJob.setIntervalInHours(1000L);
+        repairJob.setIntervalInDays(365L);
 
         RepairJob savedJob = repairJobRepository.save(repairJob);
         Optional<RepairJob> foundJob = repairJobRepository.findById(savedJob.getId());

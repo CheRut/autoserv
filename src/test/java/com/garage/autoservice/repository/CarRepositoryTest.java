@@ -11,6 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 @ActiveProfiles("test")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -63,6 +64,11 @@ public class CarRepositoryTest {
         Car savedCar = carRepository.save(car);
         assertThat(savedCar).isNotNull();
         assertThat(savedCar.getId()).isNotNull();
+
+        // Дополнительная проверка, чтобы убедиться, что объект сохранен в базе данных
+        Optional<Car> foundCar = carRepository.findById(savedCar.getId());
+        assertThat(foundCar).isPresent();
+        assertThat(foundCar.get().getVin()).isEqualTo("1HGCM82633A987654");
     }
 
     @Test
@@ -87,5 +93,9 @@ public class CarRepositoryTest {
 
         Optional<Car> foundCar = carRepository.findByVin("1HGCM82633A111111");
         assertThat(foundCar).isEmpty();
+
+        // Дополнительная проверка, чтобы убедиться, что объект действительно удален
+        Optional<Car> foundDeletedCar = carRepository.findById(savedCar.getId());
+        assertThat(foundDeletedCar).isEmpty();
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,10 +45,12 @@ public class PartRepositoryTest {
     @Test
     public void testFindByName() {
         partRepository.save(part);
-        List<Part> parts = partRepository.findByName("Oil Filter");
-        assertFalse(parts.isEmpty());
-        assertEquals(1, parts.size());
+        Optional<Part> partOptional = partRepository.findByName("Oil Filter");
+
+        assertTrue(partOptional.isPresent());
+        assertEquals("Oil Filter", partOptional.get().getName());
     }
+
 
     @Test
     public void testDeletePart() {

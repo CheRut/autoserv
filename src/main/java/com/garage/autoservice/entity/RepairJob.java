@@ -1,79 +1,98 @@
 package com.garage.autoservice.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Сущность, представляющая работу по ремонту и обслуживанию для конкретного автомобиля.
- * Включает в себя информацию о типе работ, интервалах проведения и данных о последних проведенных работах.
+ * Сущность для представления ремонтных работ.
  */
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class RepairJob {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * Наименование типа работ (например, замена масла).
-     */
     private String jobName;
-
-    /**
-     * Интервал проведения работы по пробегу (в километрах).
-     */
-    private int intervalInMileage;
-
-    /**
-     * Интервал проведения работы по моточасам (в часах).
-     */
-    private int intervalInHours;
-
-    /**
-     * Интервал проведения работы по сроку (в днях).
-     */
-    private int intervalInDays;
-
-    /**
-     * Пробег автомобиля на момент последней проведенной работы.
-     */
+    private Long intervalInMileage;
+    private Long intervalInHours;
+    private Long intervalInDays;
     private Long lastMileage;
+    private LocalDate lastJobDate;
 
-    /**
-     * Моточасы на момент последней проведенной работы.
-     */
-    private Long lastHours;
-
-    /**
-     * Дата последней проведенной работы.
-     */
-    @Temporal(TemporalType.DATE)
-    private Date lastServiceDate;
-
-    /**
-     * Список запчастей, необходимых для выполнения работы.
-     */
     @ManyToMany
     @JoinTable(
             name = "repairjob_parts",
             joinColumns = @JoinColumn(name = "repairjob_id"),
             inverseJoinColumns = @JoinColumn(name = "part_id")
     )
-    private List<Part> requiredParts;
+    private List<Part> requiredParts = new ArrayList<>();
 
-    /**
-     * Количество запчастей, необходимых для выполнения работы.
-     */
-    @ElementCollection
-    @CollectionTable(name = "repairjob_part_quantity", joinColumns = @JoinColumn(name = "repairjob_id"))
-    @Column(name = "quantity")
-    private List<Integer> partQuantities;
+    // Getters and setters
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getJobName() {
+        return jobName;
+    }
+
+    public void setJobName(String jobName) {
+        this.jobName = jobName;
+    }
+
+    public Long getIntervalInMileage() {
+        return intervalInMileage;
+    }
+
+    public void setIntervalInMileage(Long intervalInMileage) {
+        this.intervalInMileage = intervalInMileage;
+    }
+
+    public Long getIntervalInHours() {
+        return intervalInHours;
+    }
+
+    public void setIntervalInHours(Long intervalInHours) {
+        this.intervalInHours = intervalInHours;
+    }
+
+    public Long getIntervalInDays() {
+        return intervalInDays;
+    }
+
+    public void setIntervalInDays(Long intervalInDays) {
+        this.intervalInDays = intervalInDays;
+    }
+
+    public Long getLastMileage() {
+        return lastMileage;
+    }
+
+    public void setLastMileage(Long lastMileage) {
+        this.lastMileage = lastMileage;
+    }
+
+    public LocalDate getLastJobDate() {
+        return lastJobDate;
+    }
+
+    public void setLastJobDate(LocalDate lastJobDate) {
+        this.lastJobDate = lastJobDate;
+    }
+
+    public List<Part> getRequiredParts() {
+        return requiredParts;
+    }
+
+    public void setRequiredParts(List<Part> requiredParts) {
+        this.requiredParts = requiredParts;
+    }
 }
