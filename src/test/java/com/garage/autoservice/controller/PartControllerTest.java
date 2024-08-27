@@ -45,7 +45,7 @@ public class PartControllerTest {
         part.setManufacturer("Bosch");
         part.setPartNumber("OF123");
         part.setQuantity(50);
-        part.setPrice(15.99);
+        part.setCardNumber(1599);
         part.setVin("1HGCM82633A123456");
 
         partRequest = new PartRequest();
@@ -53,7 +53,7 @@ public class PartControllerTest {
         partRequest.setManufacturer("Bosch");
         partRequest.setPartNumber("OF123");
         partRequest.setQuantity(50);
-        partRequest.setPrice(15.99);
+        partRequest.setCardNumber(1599);
         partRequest.setVin("1HGCM82633A123456");
     }
 
@@ -65,7 +65,7 @@ public class PartControllerTest {
         savedPart.setManufacturer(partRequest.getManufacturer());
         savedPart.setPartNumber(partRequest.getPartNumber());
         savedPart.setQuantity(partRequest.getQuantity());
-        savedPart.setPrice(partRequest.getPrice());
+        savedPart.setCardNumber(partRequest.getCardNumber());
         savedPart.setVin(partRequest.getVin());
 
         when(partRepository.save(any(Part.class))).thenReturn(savedPart);
@@ -87,7 +87,7 @@ public class PartControllerTest {
         savedPart1.setManufacturer(partRequest.getManufacturer());
         savedPart1.setPartNumber(partRequest.getPartNumber());
         savedPart1.setQuantity(partRequest.getQuantity());
-        savedPart1.setPrice(partRequest.getPrice());
+        savedPart1.setCardNumber(partRequest.getCardNumber());
         savedPart1.setVin(partRequest.getVin());
 
         Part savedPart2 = new Part();
@@ -96,7 +96,7 @@ public class PartControllerTest {
         savedPart2.setManufacturer(partRequest.getManufacturer());
         savedPart2.setPartNumber(partRequest.getPartNumber());
         savedPart2.setQuantity(partRequest.getQuantity());
-        savedPart2.setPrice(partRequest.getPrice());
+        savedPart2.setCardNumber(partRequest.getCardNumber());
         savedPart2.setVin(partRequest.getVin());
 
         when(partRepository.save(any(Part.class))).thenReturn(savedPart1, savedPart2);

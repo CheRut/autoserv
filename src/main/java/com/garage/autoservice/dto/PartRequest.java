@@ -32,7 +32,7 @@ public class PartRequest {
     /**
      * Цена за единицу запчасти.
      */
-    private double price;
+    private int cardNumber;
 
     /**
      * VIN-код автомобиля, к которому подходит запчасть (может быть null).

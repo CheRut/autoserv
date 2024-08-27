@@ -2,13 +2,15 @@ package com.garage.autoservice.controller;
 
 import com.garage.autoservice.dto.PartRequest;
 import com.garage.autoservice.entity.Part;
+import com.garage.autoservice.exception.ResourceNotFoundException;
 import com.garage.autoservice.repository.PartRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -19,11 +21,10 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/parts")
 public class PartController {
 
+    private static final Logger logger = LoggerFactory.getLogger(PartController.class);
+
     @Autowired
     private PartRepository partRepository;
-
-//    @Autowired
-//    private CarRepository carRepository;
 
     /**
      * Получить список всех запчастей.
@@ -32,6 +33,7 @@ public class PartController {
      */
     @GetMapping
     public List<Part> getAllParts() {
+        logger.info("Получение списка всех запчастей");
         return partRepository.findAll();
     }
 
@@ -42,37 +44,42 @@ public class PartController {
      * @return созданная запчасть
      */
     @PostMapping
-    public Part createPart( @RequestBody PartRequest request) {
+    public Part createPart(@RequestBody PartRequest request) {
+        logger.info("Создание новой запчасти с параметрами: {}", request);
+
         Part part = new Part();
         part.setName(request.getName());
         part.setManufacturer(request.getManufacturer());
         part.setPartNumber(request.getPartNumber());
         part.setQuantity(request.getQuantity());
-        part.setPrice(request.getPrice());
+        part.setCardNumber(request.getCardNumber());
         part.setVin(request.getVin());
 
-        return partRepository.save(part);
+        Part savedPart = partRepository.save(part);
+        logger.info("Запчасть успешно создана с ID: {}", savedPart.getId());
+        return savedPart;
     }
 
-        /**
-         * Создать новые запчасти и связать их с автомобилями по VIN-коду.
-         *
-         * @param requests список запросов на создание запчастей
-         * @return список созданных запчастей
-         * @throws IllegalArgumentException если автомобиль с указанным VIN не найден
-         */
+    /**
+     * Создать новые запчасти и связать их с автомобилями по VIN-коду.
+     *
+     * @param requests список запросов на создание запчастей
+     * @return список созданных запчастей
+     */
     @PostMapping("/batch")
     public List<Part> createParts(@RequestBody List<PartRequest> requests) {
+        logger.info("Создание нескольких запчастей (batch)");
         return requests.stream().map(request -> {
             Part part = new Part();
             part.setName(request.getName());
             part.setManufacturer(request.getManufacturer());
             part.setPartNumber(request.getPartNumber());
             part.setQuantity(request.getQuantity());
-            part.setPrice(request.getPrice());
+            part.setCardNumber(request.getCardNumber());
             part.setVin(request.getVin());
 
             Part savedPart = partRepository.save(part);
+            logger.info("Запчасть создана с ID: {}", savedPart.getId());
             return savedPart;
         }).collect(Collectors.toList());
     }
@@ -85,9 +92,13 @@ public class PartController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<Part> getPartById(@PathVariable Long id) {
-        return partRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        logger.info("Запрос на получение запчасти с ID: {}", id);
+        Part part = partRepository.findById(id)
+                .orElseThrow(() -> {
+                    logger.error("Запчасть с ID {} не найдена", id);
+                    return new ResourceNotFoundException("Запчасть с ID " + id + " не найдена");
+                });
+        return ResponseEntity.ok(part);
     }
 
     /**
@@ -96,28 +107,30 @@ public class PartController {
      * @param id идентификатор запчасти для обновления
      * @param partDetails объект с обновленными данными запчасти
      * @return объект {@link ResponseEntity}, содержащий обновленную запчасть или статус 404, если запчасть не найдена
-     * @throws IllegalArgumentException если автомобиль с указанным VIN не найден или тип автомобиля не соответствует
      */
     @PutMapping("/{id}")
     public ResponseEntity<Part> updatePart(@PathVariable Long id, @RequestBody Part partDetails) {
-        return partRepository.findById(id)
-                .map(part -> {
-                    part.setName(partDetails.getName());
-                    part.setManufacturer(partDetails.getManufacturer());
-                    part.setPartNumber(partDetails.getPartNumber());
-                    part.setQuantity(partDetails.getQuantity());
-                    part.setPrice(partDetails.getPrice());
+        logger.info("Запрос на обновление запчасти с ID: {}", id);
+        Part part = partRepository.findById(id)
+                .orElseThrow(() -> {
+                    logger.error("Запчасть с ID {} не найдена для обновления", id);
+                    return new ResourceNotFoundException("Запчасть с ID " + id + " не найдена");
+                });
 
-                    if (partDetails.getVin() != null) {
-                        part.setVin(partDetails.getVin());
-                    }
+        part.setName(partDetails.getName());
+        part.setManufacturer(partDetails.getManufacturer());
+        part.setPartNumber(partDetails.getPartNumber());
+        part.setQuantity(partDetails.getQuantity());
+        part.setCardNumber(partDetails.getCardNumber());
 
-                    Part updatedPart = partRepository.save(part);
-                    return ResponseEntity.ok(updatedPart);
-                }).orElse(ResponseEntity.notFound().build());
+        if (partDetails.getVin() != null) {
+            part.setVin(partDetails.getVin());
+        }
+
+        Part updatedPart = partRepository.save(part);
+        logger.info("Запчасть с ID {} успешно обновлена", id);
+        return ResponseEntity.ok(updatedPart);
     }
-
-
 
     /**
      * Удалить запчасть по идентификатору.
@@ -127,10 +140,15 @@ public class PartController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePart(@PathVariable Long id) {
-        return partRepository.findById(id)
-                .map(part -> {
-                    partRepository.delete(part);
-                    return ResponseEntity.ok().<Void>build();
-                }).orElse(ResponseEntity.notFound().build());
+        logger.info("Запрос на удаление запчасти с ID: {}", id);
+        Part part = partRepository.findById(id)
+                .orElseThrow(() -> {
+                    logger.error("Запчасть с ID {} не найдена для удаления", id);
+                    return new ResourceNotFoundException("Запчасть с ID " + id + " не найдена");
+                });
+
+        partRepository.delete(part);
+        logger.info("Запчасть с ID {} успешно удалена", id);
+        return ResponseEntity.ok().build();
     }
 }

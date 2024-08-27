@@ -9,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,7 +30,7 @@ public class PartRepositoryTest {
         part.setManufacturer("Bosch");
         part.setPartNumber("OF123");
         part.setQuantity(50);
-        part.setPrice(15.99);
+        part.setCardNumber(1599);
         part.setVin("1HGCM82633A123456");  // Обязательное поле VIN
     }
 

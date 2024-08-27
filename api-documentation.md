@@ -467,6 +467,46 @@ GET /api/repair-jobs/by-period?serialNumber=ABC123&startDate=2024-01-01&endDate=
 ]
 
 ```
+
+## Get All Fluid Usage Records
+
+**URL:** `/api/fluid-usage`  
+**Method:** `GET`  
+**Description:** `Возвращает список всех записей о расходе рабочих жидкостей.`               
+**Response:**
+        `200 OK - Список всех записей.`
+
+Update Fluid Usage Record
+
+**URL:** `/api/fluid-usage/{id}`  
+**Method:** `PUT`  
+**Description:** `Обновляет запись о расходе рабочей жидкости.`  
+**Request Body:**
+
+ ```   json
+
+    {
+      "serialNumber": "string",
+      "date": "string (date)",
+      "fluidType": "string",
+      "fluidBrand": "string",
+      "fluidVolume": "number",
+      "mileage": "integer"
+    }
+```
+**Response:**
+        200 OK - Возвращает обновленную запись.
+
+**Delete Fluid Usage Record**
+
+**URL:** `/api/fluid-usage/{id}`  
+**Method:** `DELETE`  
+**Description:** `Удаляет запись о расходе рабочей жидкости.`  
+**Response:**
+        200 OK - Статус успешного удаления.
+
+
+
 ## Conclusion
 
 This documentation provides the details for interacting with the Auto Service API for managing cars, parts, and repair jobs. Make sure to update the API endpoints as necessary when your application evolves.

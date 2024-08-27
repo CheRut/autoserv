@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.antlr.v4.runtime.misc.NotNull;
 
 /**
  * Представляет сущность запчасти, связанной с автомобилем.
@@ -48,9 +47,9 @@ public class Part {
     private int quantity;
 
     /**
-     * Цена за единицу запчасти.
+     * кврточка-идентификатор запчасти на складе.
      */
-    private double price;
+    private int cardNumber;
 
     /**
      * VIN-код автомобиля, к которому подходит запчасть.

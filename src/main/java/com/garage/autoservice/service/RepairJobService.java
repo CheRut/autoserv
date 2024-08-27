@@ -4,8 +4,12 @@ import com.garage.autoservice.dto.PartRequest;
 import com.garage.autoservice.dto.RepairJobRequest;
 import com.garage.autoservice.entity.Part;
 import com.garage.autoservice.entity.RepairJob;
+import com.garage.autoservice.exception.InvalidRequestException;
+import com.garage.autoservice.exception.ResourceNotFoundException;
 import com.garage.autoservice.repository.PartRepository;
 import com.garage.autoservice.repository.RepairJobRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +24,8 @@ import java.util.Optional;
  */
 @Service
 public class RepairJobService {
+
+    private static final Logger logger = LoggerFactory.getLogger(RepairJobService.class);
 
     private final RepairJobRepository repairJobRepository;
     private final PartRepository partRepository;
@@ -38,18 +44,26 @@ public class RepairJobService {
      */
     @Transactional
     public RepairJob createRepairJob(RepairJobRequest request) {
-        RepairJob repairJob = new RepairJob();
-        repairJob.setJobName(request.getJobName());
-        repairJob.setIntervalInMileage(request.getIntervalInMileage());
-        repairJob.setIntervalInHours(request.getIntervalInHours());
-        repairJob.setIntervalInDays(request.getIntervalInDays());
-        repairJob.setLastMileage(request.getLastMileage());
-        repairJob.setLastJobDate(request.getLastJobDate());
+        logger.info("Создание новой ремонтной работы: {}", request);
+        try {
+            RepairJob repairJob = new RepairJob();
+            repairJob.setJobName(request.getJobName());
+            repairJob.setIntervalInMileage(request.getIntervalInMileage());
+            repairJob.setIntervalInHours(request.getIntervalInHours());
+            repairJob.setIntervalInDays(request.getIntervalInDays());
+            repairJob.setLastMileage(request.getLastMileage());
+            repairJob.setLastJobDate(request.getLastJobDate());
 
-        List<Part> requiredParts = processParts(request.getRequiredParts());
-        repairJob.setRequiredParts(requiredParts);
+            List<Part> requiredParts = processParts(request.getRequiredParts());
+            repairJob.setRequiredParts(requiredParts);
 
-        return repairJobRepository.save(repairJob);
+            RepairJob savedJob = repairJobRepository.save(repairJob);
+            logger.info("Ремонтная работа успешно создана с ID: {}", savedJob.getId());
+            return savedJob;
+        } catch (Exception e) {
+            logger.error("Ошибка при создании ремонтной работы: {}", e.getMessage());
+            throw new InvalidRequestException("Не удалось создать ремонтную работу: " + e.getMessage());
+        }
     }
 
     /**
@@ -60,12 +74,19 @@ public class RepairJobService {
      */
     @Transactional
     public List<RepairJob> createRepairJobsBatch(List<RepairJobRequest> requests) {
+        logger.info("Создание партии ремонтных работ: {}", requests);
         List<RepairJob> createdJobs = new ArrayList<>();
-        for (RepairJobRequest request : requests) {
-            RepairJob createdJob = createRepairJob(request);
-            createdJobs.add(createdJob);
+        try {
+            for (RepairJobRequest request : requests) {
+                RepairJob createdJob = createRepairJob(request);
+                createdJobs.add(createdJob);
+            }
+            logger.info("Успешно создано {} ремонтных работ", createdJobs.size());
+            return createdJobs;
+        } catch (Exception e) {
+            logger.error("Ошибка при создании партии ремонтных работ: {}", e.getMessage());
+            throw new InvalidRequestException("Не удалось создать партию ремонтных работ: " + e.getMessage());
         }
-        return createdJobs;
     }
 
     /**
@@ -75,8 +96,12 @@ public class RepairJobService {
      * @return найденная ремонтная работа
      */
     public RepairJob getRepairJobById(Long id) {
+        logger.info("Получение ремонтной работы с ID: {}", id);
         return repairJobRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Ремонтная работа с ID " + id + " не найдена"));
+                .orElseThrow(() -> {
+                    logger.error("Ремонтная работа с ID {} не найдена", id);
+                    return new ResourceNotFoundException("Ремонтная работа с ID " + id + " не найдена");
+                });
     }
 
     /**
@@ -85,6 +110,7 @@ public class RepairJobService {
      * @return список всех ремонтных работ
      */
     public List<RepairJob> getAllRepairJobs() {
+        logger.info("Получение всех ремонтных работ");
         return repairJobRepository.findAll();
     }
 
@@ -98,20 +124,31 @@ public class RepairJobService {
      */
     @Transactional
     public RepairJob updateRepairJob(Long id, RepairJobRequest request) {
+        logger.info("Обновление ремонтной работы с ID: {}", id);
         RepairJob repairJob = repairJobRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Ремонтная работа с ID " + id + " не найдена"));
+                .orElseThrow(() -> {
+                    logger.error("Ремонтная работа с ID {} не найдена", id);
+                    return new ResourceNotFoundException("Ремонтная работа с ID " + id + " не найдена");
+                });
 
-        repairJob.setJobName(request.getJobName());
-        repairJob.setIntervalInMileage(request.getIntervalInMileage());
-        repairJob.setIntervalInHours(request.getIntervalInHours());
-        repairJob.setIntervalInDays(request.getIntervalInDays());
-        repairJob.setLastMileage(request.getLastMileage());
-        repairJob.setLastJobDate(request.getLastJobDate());
+        try {
+            repairJob.setJobName(request.getJobName());
+            repairJob.setIntervalInMileage(request.getIntervalInMileage());
+            repairJob.setIntervalInHours(request.getIntervalInHours());
+            repairJob.setIntervalInDays(request.getIntervalInDays());
+            repairJob.setLastMileage(request.getLastMileage());
+            repairJob.setLastJobDate(request.getLastJobDate());
 
-        List<Part> updatedParts = processParts(request.getRequiredParts());
-        repairJob.setRequiredParts(updatedParts);
+            List<Part> updatedParts = processParts(request.getRequiredParts());
+            repairJob.setRequiredParts(updatedParts);
 
-        return repairJobRepository.save(repairJob);
+            RepairJob updatedJob = repairJobRepository.save(repairJob);
+            logger.info("Ремонтная работа с ID {} успешно обновлена", id);
+            return updatedJob;
+        } catch (Exception e) {
+            logger.error("Ошибка при обновлении ремонтной работы с ID {}: {}", id, e.getMessage());
+            throw new InvalidRequestException("Не удалось обновить ремонтную работу: " + e.getMessage());
+        }
     }
 
     /**
@@ -121,6 +158,7 @@ public class RepairJobService {
      * @return список сохраненных запчастей
      */
     private List<Part> processParts(List<PartRequest> partRequests) {
+        logger.info("Обработка запчастей: {}", partRequests);
         List<Part> parts = new ArrayList<>();
 
         for (PartRequest partRequest : partRequests) {
@@ -132,6 +170,7 @@ public class RepairJobService {
                 part.setQuantity(part.getQuantity() + partRequest.getQuantity());
                 partRepository.save(part);
                 parts.add(part);
+                logger.debug("Запчасть {} обновлена в базе данных", part.getName());
             } else {
                 Part newPart = new Part();
                 newPart.setName(partRequest.getName());
@@ -141,11 +180,13 @@ public class RepairJobService {
                 newPart.setVin(partRequest.getVin());
                 partRepository.save(newPart);
                 parts.add(newPart);
+                logger.debug("Запчасть {} добавлена в базу данных", newPart.getName());
             }
         }
 
         return parts;
     }
+
     /**
      * Получает все ремонтные работы для заданного автомобиля за указанный период времени.
      *
@@ -156,6 +197,7 @@ public class RepairJobService {
      */
     @Transactional(readOnly = true)
     public List<RepairJob> getJobsForVehicleInPeriod(String serialNumber, LocalDate startDate, LocalDate endDate) {
+        logger.info("Получение ремонтных работ для автомобиля с серийным номером {} за период с {} по {}", serialNumber, startDate, endDate);
         return repairJobRepository.findAllBySerialNumberAndLastJobDateBetween(serialNumber, startDate, endDate);
     }
 }
