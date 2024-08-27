@@ -22,6 +22,7 @@ public class RepairJob {
     private Long lastMileage;
     private LocalDate lastJobDate;
 
+    private String serialNumber;
     @ManyToMany
     @JoinTable(
             name = "repairjob_parts",
@@ -94,5 +95,13 @@ public class RepairJob {
 
     public void setRequiredParts(List<Part> requiredParts) {
         this.requiredParts = requiredParts;
+    }
+
+    public String getSerialNumber() {
+        return serialNumber;
+    }
+
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
     }
 }

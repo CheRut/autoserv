@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -81,6 +82,21 @@ public class RepairJobController {
         RepairJob updatedJob = repairJobService.updateRepairJob(id, repairJob);
         return ResponseEntity.ok(updatedJob);
     }
-
+    /**
+     * Получает все ремонтные работы для заданного автомобиля за указанный период времени.
+     *
+     * @param serialNumber идентификатор автомобиля (serialNumber)
+     * @param startDate начальная дата периода
+     * @param endDate конечная дата периода
+     * @return список ремонтных работ
+     */
+    @GetMapping("/by-period")
+    public ResponseEntity<List<RepairJob>> getJobsForVehicleInPeriod(
+            @RequestParam String serialNumber,
+            @RequestParam LocalDate startDate,
+            @RequestParam LocalDate endDate) {
+        List<RepairJob> repairJobs = repairJobService.getJobsForVehicleInPeriod(serialNumber, startDate, endDate);
+        return ResponseEntity.ok(repairJobs);
+    }
 
 }

@@ -403,6 +403,70 @@ json
 "message": "Repair Job with ID 1 has been deleted."
 }
 ```
+
+## GET /api/repair-jobs/by-period
+
+Этот запрос возвращает список ремонтных работ для заданного автомобиля за указанный период времени.
+
+### Параметры
+
+| Параметр     | Тип     | Обязательный | Описание                                                  |
+| ------------ | ------- | ------------ | --------------------------------------------------------- |
+| serialNumber | String  | Да           | Идентификатор автомобиля (Serial Number).                 |
+| startDate    | String  | Да           | Начальная дата периода в формате `YYYY-MM-DD`.            |
+| endDate      | String  | Да           | Конечная дата периода в формате `YYYY-MM-DD`.             |
+
+**Request**
+
+```http
+GET /api/repair-jobs/by-period?serialNumber=ABC123&startDate=2024-01-01&endDate=2024-12-31
+```
+**Response**
+```json
+[
+  {
+    "id": 1,
+    "jobName": "Oil Change",
+    "intervalInMileage": 10000,
+    "intervalInHours": 1000,
+    "intervalInDays": 365,
+    "lastMileage": 9000,
+    "lastJobDate": "2024-07-01",
+    "requiredParts": [
+      {
+        "id": 1,
+        "name": "Oil Filter",
+        "manufacturer": "Bosch",
+        "partNumber": "OF123",
+        "quantity": 2,
+        "price": 15.0,
+        "vin": "ABC123"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "jobName": "Brake Inspection",
+    "intervalInMileage": 15000,
+    "intervalInHours": 1200,
+    "intervalInDays": 730,
+    "lastMileage": 14000,
+    "lastJobDate": "2024-09-15",
+    "requiredParts": [
+      {
+        "id": 2,
+        "name": "Brake Pad",
+        "manufacturer": "Brembo",
+        "partNumber": "BP456",
+        "quantity": 4,
+        "price": 45.0,
+        "vin": "ABC123"
+      }
+    ]
+  }
+]
+
+```
 ## Conclusion
 
 This documentation provides the details for interacting with the Auto Service API for managing cars, parts, and repair jobs. Make sure to update the API endpoints as necessary when your application evolves.

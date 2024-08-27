@@ -112,4 +112,23 @@ public class RepairJobControllerTest {
                 .andExpect(jsonPath("$.id").value(repairJob.getId()))
                 .andExpect(jsonPath("$.jobName").value(repairJob.getJobName()));
     }
+    @Test
+    void testGetJobsForVehicleInPeriod() throws Exception {
+        List<RepairJob> repairJobs = Arrays.asList(repairJob, repairJob);
+
+        when(repairJobService.getJobsForVehicleInPeriod(Mockito.eq("123456"), any(LocalDate.class), any(LocalDate.class)))
+                .thenReturn(repairJobs);
+
+        mockMvc.perform(get("/api/repair-jobs/by-period")
+                        .param("serialNumber", "123456")
+                        .param("startDate", "2024-01-01")
+                        .param("endDate", "2024-12-31")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].id").value(repairJob.getId()))
+                .andExpect(jsonPath("$[0].jobName").value(repairJob.getJobName()))
+                .andExpect(jsonPath("$[1].id").value(repairJob.getId()))
+                .andExpect(jsonPath("$[1].jobName").value(repairJob.getJobName()));
+    }
 }

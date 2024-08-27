@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -144,5 +145,17 @@ public class RepairJobService {
         }
 
         return parts;
+    }
+    /**
+     * Получает все ремонтные работы для заданного автомобиля за указанный период времени.
+     *
+     * @param serialNumber идентификатор автомобиля (serialNumber)
+     * @param startDate начальная дата периода
+     * @param endDate конечная дата периода
+     * @return список ремонтных работ
+     */
+    @Transactional(readOnly = true)
+    public List<RepairJob> getJobsForVehicleInPeriod(String serialNumber, LocalDate startDate, LocalDate endDate) {
+        return repairJobRepository.findAllBySerialNumberAndLastJobDateBetween(serialNumber, startDate, endDate);
     }
 }
