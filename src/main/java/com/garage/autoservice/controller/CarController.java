@@ -58,9 +58,10 @@ public class CarController {
     public ResponseEntity<List<Car>> createCars(@Valid @RequestBody List<Car> cars) {
         logger.info("Создание нескольких автомобилей, количество: {}", cars.size());
         List<Car> savedCars = carRepository.saveAll(cars);
-        logger.debug("Автомобили созданы: {}", savedCars);
+        logger.debug("Количество сохраненных автомобилей: {}", savedCars.size());
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCars);
     }
+
 
     /**
      * Получить автомобиль по идентификатору.
@@ -78,7 +79,16 @@ public class CarController {
                 });
         return ResponseEntity.ok(car);
     }
+    @PutMapping("/{id}/mileage")
+    public ResponseEntity<Car> updateMileage(@PathVariable Long id, @RequestBody long newMileage) {
+        Car car = carRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Автомобиль с ID " + id + " не найден"));
 
+        car.setMileage(newMileage);
+        carRepository.save(car);
+
+        return ResponseEntity.ok(car);
+    }
     /**
      * Обновить информацию об автомобиле.
      *

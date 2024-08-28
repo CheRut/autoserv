@@ -48,8 +48,10 @@ public class FluidUsageService {
      */
     @Transactional(readOnly = true)
     public List<FluidUsage> getAllFluidUsageRecords() {
+        logger.info("Запрос на получение всех записей о расходе рабочих жидкостей");
         return fluidUsageRepository.findAll();
     }
+
 
     /**
      * Получает запись о расходе рабочей жидкости по идентификатору.
@@ -59,8 +61,10 @@ public class FluidUsageService {
      */
     @Transactional(readOnly = true)
     public Optional<FluidUsage> getFluidUsageById(Long id) {
+        logger.info("Запрос на получение записи о расходе рабочей жидкости с ID: {}", id);
         return fluidUsageRepository.findById(id);
     }
+
 
     /**
      * Обновляет существующую запись о расходе рабочей жидкости.
@@ -116,4 +120,5 @@ public class FluidUsageService {
         fluidUsage.setDate(fluidUsageRequest.getDate());
         return fluidUsage;
     }
+
 }

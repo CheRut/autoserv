@@ -22,16 +22,20 @@ public interface PartRepository extends JpaRepository<Part, Long> {
      * @param name название запчасти
      * @return список запчастей с указанным названием
      */
-
-
     Optional<Part> findByName(String name);
-    // Метод для поиска запчасти по VIN-коду
+
+    /**
+     * Метод для поиска запчасти по VIN-коду.
+     *
+     * @param vin VIN-код автомобиля
+     * @return найденная запчасть, если такая существует
+     */
     Optional<Part> findByVin(String vin);
 
     /**
-     * Поиск запчасти по имени, производителю и номеру партии.
+     * Метод для поиска запчасти по имени, производителю и номеру партии.
      *
-     * @param name имя запчасти
+     * @param name название запчасти
      * @param manufacturer производитель запчасти
      * @param partNumber номер партии
      * @return найденная запчасть, если такая существует

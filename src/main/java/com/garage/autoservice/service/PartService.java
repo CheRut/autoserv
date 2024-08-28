@@ -29,7 +29,7 @@ public class PartService {
      * @return true, если все запчасти доступны, иначе false
      */
     public boolean arePartsAvailable(List<Part> parts) {
-        logger.info("Проверка доступности запчастей: {}", parts);
+        logger.debug("Проверка доступности запчастей: {}", parts);
 
         for (Part part : parts) {
             Optional<Part> foundPart = partRepository.findByVin(part.getVin());
@@ -44,9 +44,13 @@ public class PartService {
                         part.getName(), part.getQuantity(), foundPart.get().getQuantity());
                 return false;
             }
+
+            logger.debug("Запчасть {} с VIN {} доступна в количестве {}",
+                    part.getName(), part.getVin(), foundPart.get().getQuantity());
         }
 
-        logger.info("Все запчасти доступны.");
+        logger.debug("Все запчасти доступны.");
         return true;
     }
+
 }

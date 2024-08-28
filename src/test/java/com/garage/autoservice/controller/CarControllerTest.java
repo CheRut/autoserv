@@ -1,15 +1,18 @@
 package com.garage.autoservice.controller;
 
 import com.garage.autoservice.entity.Car;
+import com.garage.autoservice.exception.GlobalExceptionHandler;
 import com.garage.autoservice.repository.CarRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,6 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CarController.class)
+@Import(GlobalExceptionHandler.class)
 public class CarControllerTest {
 
     @Autowired
@@ -36,6 +40,7 @@ public class CarControllerTest {
 
     @BeforeEach
     void setUp() {
+
         car = new Car();
         car.setId(1L);
         car.setSerialNumber("1234567890");
@@ -102,6 +107,17 @@ public class CarControllerTest {
                 .andExpect(jsonPath("$.id").value(car.getId()));
     }
 
+//    @Test
+//    void testGetCarById_NotFound() throws Exception {
+//        when(carRepository.findById(1L)).thenReturn(Optional.empty());
+//
+//        mockMvc.perform(get("/api/cars/1")
+//                        .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isNotFound())
+//                .andExpect(jsonPath("$.message").value("Автомобиль с ID 1 не найден"))
+//                .andExpect(jsonPath("$.details").exists());
+//    }
+
     @Test
     void testUpdateCar() throws Exception {
         when(carRepository.findById(1L)).thenReturn(Optional.of(car));
@@ -116,6 +132,21 @@ public class CarControllerTest {
                 .andExpect(jsonPath("$.make").value("Honda"));
     }
 
+//    @Test
+//    void testUpdateCar_NotFound() throws Exception {
+//        when(carRepository.findById(1L)).thenReturn(Optional.empty());
+//
+//        car.setMake("Honda");
+//
+//        mockMvc.perform(put("/api/cars/1")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(car))
+//                        .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isNotFound())
+//                .andExpect(jsonPath("$.message").value("Автомобиль с ID 1 не найден"))
+//                .andExpect(jsonPath("$.details").exists());
+//    }
+
     @Test
     void testDeleteCar() throws Exception {
         when(carRepository.findById(1L)).thenReturn(Optional.of(car));
@@ -126,4 +157,15 @@ public class CarControllerTest {
 
         verify(carRepository, times(1)).delete(car);
     }
+
+//    @Test
+//    void testDeleteCar_NotFound() throws Exception {
+//        when(carRepository.findById(1L)).thenReturn(Optional.empty());
+//
+//        mockMvc.perform(delete("/api/cars/1")
+//                        .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isNotFound())
+//                .andExpect(jsonPath("$.message").value("Автомобиль с ID 1 не найден"))
+//                .andExpect(jsonPath("$.details").exists());
+//    }
 }
