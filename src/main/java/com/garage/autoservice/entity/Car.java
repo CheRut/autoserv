@@ -156,6 +156,9 @@ public class Car implements Serializable {
     @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Part> parts;
 
+
+
+
     /**
      * Перечисление типов автомобилей.
      */

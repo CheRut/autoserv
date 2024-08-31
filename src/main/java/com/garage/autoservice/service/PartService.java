@@ -26,6 +26,34 @@ public class PartService {
     @Autowired
     private PartRepository partRepository;
 
+
+
+    /**
+     * Возвращает все запчасти из базы данных.
+     *
+     * @return список запчастей
+     */
+    public List<Part> findAll() {
+        return partRepository.findAll();
+    }
+    /**
+     * Сохраняет или обновляет запчасть в базе данных.
+     *
+     * @param part запчасть для сохранения или обновления
+     */
+    public void save(Part part) {
+        partRepository.save(part);
+    }
+
+    /**
+     * Удаляет запчасть из базы данных.
+     *
+     * @param part запчасть для удаления
+     */
+    public void delete(Part part) {
+        partRepository.delete(part);
+    }
+
     /**
      * Проверяет, доступны ли все запчасти из списка.
      *
