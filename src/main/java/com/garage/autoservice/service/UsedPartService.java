@@ -1,9 +1,10 @@
 package com.garage.autoservice.service;
 
 import com.garage.autoservice.entity.UsedParts;
-
 import com.garage.autoservice.exception.ResourceNotFoundException;
 import com.garage.autoservice.repository.UsedPartRepository;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class UsedPartService {
      * @return сохраненная запись
      */
     @Transactional
-    public UsedParts createUsedPart(UsedParts usedPart) {
+    public UsedParts createUsedPart(@Valid @NotNull UsedParts usedPart) {
         logger.info("Создание записи об использованной запчасти: {}", usedPart);
         return usedPartRepository.save(usedPart);
     }
@@ -52,11 +53,15 @@ public class UsedPartService {
      * @param id идентификатор записи
      * @param usedPart данные для обновления
      * @return обновленная запись
+     * @throws ResourceNotFoundException если запись с указанным id не найдена
      */
     @Transactional
-    public UsedParts updateUsedPart(Long id, UsedParts usedPart) {
+    public UsedParts updateUsedPart(@NotNull Long id, @Valid @NotNull UsedParts usedPart) {
         UsedParts existingPart = usedPartRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Запись об использованной запчасти с ID " + id + " не найдена"));
+                .orElseThrow(() -> {
+                    logger.error("Запись об использованной запчасти с ID {} не найдена", id);
+                    return new ResourceNotFoundException("Запись об использованной запчасти с ID " + id + " не найдена");
+                });
 
         logger.info("Обновление записи об использованной запчасти с ID: {}", id);
 
@@ -66,20 +71,27 @@ public class UsedPartService {
         existingPart.setQuantity(usedPart.getQuantity());
         existingPart.setCardNumber(usedPart.getCardNumber());
 
-        return usedPartRepository.save(existingPart);
+        UsedParts updatedPart = usedPartRepository.save(existingPart);
+        logger.debug("Запись об использованной запчасти с ID {} успешно обновлена", id);
+        return updatedPart;
     }
 
     /**
      * Удаляет запись об использованной запчасти.
      *
      * @param id идентификатор записи
+     * @throws ResourceNotFoundException если запись с указанным id не найдена
      */
     @Transactional
-    public void deleteUsedPart(Long id) {
+    public void deleteUsedPart(@NotNull Long id) {
         UsedParts usedParts = usedPartRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Запись об использованной запчасти с ID " + id + " не найдена"));
+                .orElseThrow(() -> {
+                    logger.error("Запись об использованной запчасти с ID {} не найдена", id);
+                    return new ResourceNotFoundException("Запись об использованной запчасти с ID " + id + " не найдена");
+                });
 
         logger.info("Удаление записи об использованной запчасти с ID: {}", id);
         usedPartRepository.delete(usedParts);
+        logger.debug("Запись об использованной запчасти с ID {} успешно удалена", id);
     }
 }

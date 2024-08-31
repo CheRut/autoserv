@@ -3,6 +3,9 @@ package com.garage.autoservice.controller;
 import com.garage.autoservice.entity.Car;
 import com.garage.autoservice.exception.ResourceNotFoundException;
 import com.garage.autoservice.repository.CarRepository;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -21,6 +23,7 @@ import java.util.List;
 @RequestMapping("/api/cars")
 public class CarController {
     private static final Logger logger = LoggerFactory.getLogger(CarController.class);
+
     @Autowired
     private CarRepository carRepository;
 
@@ -29,6 +32,7 @@ public class CarController {
      *
      * @return список всех автомобилей
      */
+
     @GetMapping
     public List<Car> getAllCars() {
         logger.info("Запрос на получение списка всех автомобилей");
@@ -37,9 +41,9 @@ public class CarController {
 
     /**
      * Добавление одного автомобиля
-     * @param car список автомобилей для создания
+     * @param car автомобиль для создания
      * @return созданный автомобиль
-     * */
+     */
     @PostMapping
     public ResponseEntity<Car> createCar(@Valid @RequestBody Car car) {
         logger.info("Создание нового автомобиля с VIN: {}", car.getVin());
@@ -62,7 +66,6 @@ public class CarController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCars);
     }
 
-
     /**
      * Получить автомобиль по идентификатору.
      *
@@ -70,7 +73,7 @@ public class CarController {
      * @return объект {@link ResponseEntity}, содержащий автомобиль или статус 404, если автомобиль не найден
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Car> getCarById(@PathVariable Long id) {
+    public ResponseEntity<Car> getCarById(@PathVariable @NotNull Long id) {
         logger.info("Запрос на получение автомобиля с ID: {}", id);
         Car car = carRepository.findById(id)
                 .orElseThrow(() -> {
@@ -79,8 +82,18 @@ public class CarController {
                 });
         return ResponseEntity.ok(car);
     }
+
+    /**
+     * Обновить пробег автомобиля.
+     *
+     * @param id идентификатор автомобиля для обновления
+     * @param newMileage новый пробег автомобиля
+     * @return объект {@link ResponseEntity}, содержащий обновленный автомобиль или статус 404, если автомобиль не найден
+     */
     @PutMapping("/{id}/mileage")
-    public ResponseEntity<Car> updateMileage(@PathVariable Long id, @RequestBody long newMileage) {
+    public ResponseEntity<Car> updateMileage(
+            @PathVariable @NotNull Long id,
+            @RequestBody @PositiveOrZero long newMileage) {
         Car car = carRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Автомобиль с ID " + id + " не найден"));
 
@@ -89,6 +102,7 @@ public class CarController {
 
         return ResponseEntity.ok(car);
     }
+
     /**
      * Обновить информацию об автомобиле.
      *
@@ -97,7 +111,7 @@ public class CarController {
      * @return объект {@link ResponseEntity}, содержащий обновленный автомобиль или статус 404, если автомобиль не найден
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Car> updateCar(@PathVariable Long id, @RequestBody Car carDetails) {
+    public ResponseEntity<Car> updateCar(@PathVariable @NotNull Long id, @Valid @RequestBody Car carDetails) {
         logger.info("Запрос на обновление автомобиля с ID: {}", id);
         Car updatedCar = carRepository.findById(id)
                 .map(car -> {
@@ -132,7 +146,7 @@ public class CarController {
      * @return объект {@link ResponseEntity} со статусом 200, если удаление успешно, или статус 404, если автомобиль не найден
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCar(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCar(@PathVariable @NotNull Long id) {
         logger.info("Запрос на удаление автомобиля с ID: {}", id);
         return carRepository.findById(id)
                 .map(car -> {
@@ -145,5 +159,4 @@ public class CarController {
                     return new ResourceNotFoundException("Автомобиль с ID " + id + " не найден");
                 });
     }
-
 }

@@ -15,6 +15,7 @@ import java.util.Optional;
 
 /**
  * Сервис для управления расходом рабочих жидкостей.
+ * Обеспечивает методы для создания, получения, обновления и удаления записей о расходе жидкостей.
  */
 @Service
 public class FluidUsageService {
@@ -52,7 +53,6 @@ public class FluidUsageService {
         return fluidUsageRepository.findAll();
     }
 
-
     /**
      * Получает запись о расходе рабочей жидкости по идентификатору.
      *
@@ -64,7 +64,6 @@ public class FluidUsageService {
         logger.info("Запрос на получение записи о расходе рабочей жидкости с ID: {}", id);
         return fluidUsageRepository.findById(id);
     }
-
 
     /**
      * Обновляет существующую запись о расходе рабочей жидкости.
@@ -110,7 +109,7 @@ public class FluidUsageService {
      * @param fluidUsageRequest DTO с данными о расходе жидкости
      * @return сущность FluidUsage
      */
-    public FluidUsage convertToEntity(FluidUsageRequest fluidUsageRequest) {
+    private FluidUsage convertToEntity(FluidUsageRequest fluidUsageRequest) {
         FluidUsage fluidUsage = new FluidUsage();
         fluidUsage.setSerialNumber(fluidUsageRequest.getSerialNumber());
         fluidUsage.setFluidType(fluidUsageRequest.getFluidType());
@@ -120,5 +119,4 @@ public class FluidUsageService {
         fluidUsage.setDate(fluidUsageRequest.getDate());
         return fluidUsage;
     }
-
 }

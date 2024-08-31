@@ -3,34 +3,37 @@ package com.garage.autoservice.repository;
 import com.garage.autoservice.entity.RepairJob;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
-@ActiveProfiles("test")
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+// Аннотация для запуска Spring Boot контекста во время теста
+@SpringBootTest
 public class RepairJobRepositoryTest {
 
     @Autowired
     private RepairJobRepository repairJobRepository;
 
     @Test
-    public void testSaveAndFindById() {
+    public void testSaveAndFind() {
+        // Создание нового объекта RepairJob
         RepairJob repairJob = new RepairJob();
-        repairJob.setJobName("Oil Change");
-        repairJob.setIntervalInMileage(10000L);
-        repairJob.setIntervalInHours(1000L);
-        repairJob.setIntervalInDays(365L);
+        repairJob.setJobName("Test Job");
+        repairJob.setSerialNumber("123ABC");
 
+        // Сохранение RepairJob в базу данных
         RepairJob savedJob = repairJobRepository.save(repairJob);
-        Optional<RepairJob> foundJob = repairJobRepository.findById(savedJob.getId());
 
-        assertThat(foundJob).isPresent();
-        assertThat(foundJob.get().getJobName()).isEqualTo("Oil Change");
+        // Проверка, что ID был сгенерирован и объект был сохранен
+        assertNotNull(savedJob.getId());
+        assertEquals("Test Job", savedJob.getJobName());
+
+        // Попытка найти объект по ID
+        Optional<RepairJob> foundJob = repairJobRepository.findById(savedJob.getId());
+        assertTrue(foundJob.isPresent());
+        assertEquals("Test Job", foundJob.get().getJobName());
     }
 }

@@ -1,6 +1,7 @@
 package com.garage.autoservice.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,6 +11,7 @@ import java.util.List;
 
 /**
  * Сущность для представления ремонтных работ.
+ * Включает информацию о запланированных интервалах выполнения работ и связанных запчастях.
  */
 @Entity
 public class RepairJob {
@@ -20,13 +22,24 @@ public class RepairJob {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Название работы не может быть пустым")
     private String jobName;
+
+    @Positive(message = "Интервал по пробегу должен быть положительным числом")
     private Long intervalInMileage;
+
+    @Positive(message = "Интервал по моточасам должен быть положительным числом")
     private Long intervalInHours;
+
+    @Positive(message = "Интервал по дням должен быть положительным числом")
     private Long intervalInDays;
+
+    @Positive(message = "Последний пробег должен быть положительным числом")
     private Long lastMileage;
+
     private LocalDate lastJobDate;
 
+    @NotBlank(message = "Серийный номер не может быть пустым")
     private String serialNumber;
 
     @ManyToMany
@@ -36,8 +49,6 @@ public class RepairJob {
             inverseJoinColumns = @JoinColumn(name = "part_id")
     )
     private List<Part> requiredParts = new ArrayList<>();
-
-    // Getters and setters with logging
 
     public Long getId() {
         logger.debug("Получение ID: {}", id);

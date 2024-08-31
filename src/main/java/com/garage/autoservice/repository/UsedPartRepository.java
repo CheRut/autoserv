@@ -6,8 +6,9 @@ import org.springframework.stereotype.Repository;
 
 /**
  * Репозиторий для работы с записями об использованных запчастях.
+ * Обеспечивает стандартные CRUD-операции для сущностей {@link UsedParts} в базе данных.
  */
 @Repository
 public interface UsedPartRepository extends JpaRepository<UsedParts, Long> {
-    // Дополнительные методы для поиска можно добавить здесь
+    // Дополнительные методы для поиска можно добавить здесь при необходимости
 }

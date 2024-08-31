@@ -7,6 +7,7 @@ import com.garage.autoservice.repository.MaintenanceRecordRepository;
 import com.garage.autoservice.repository.PlannedMaintenanceRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * REST-контроллер для управления операциями по техническому обслуживанию автомобилей.
+ */
 @RestController
 @RequestMapping("/api/maintenance")
 @Api(tags = "Maintenance API", description = "Operations related to vehicle maintenance")
@@ -68,7 +72,7 @@ public class MaintenanceController {
      */
     @PostMapping("/records")
     @ApiOperation(value = "Add a new maintenance record", notes = "Add a new maintenance record for a vehicle.")
-    public ResponseEntity<MaintenanceRecord> addMaintenanceRecord(@RequestBody MaintenanceRecord record) {
+    public ResponseEntity<MaintenanceRecord> addMaintenanceRecord(@Valid @RequestBody MaintenanceRecord record) {
         logger.info("Добавление новой записи о техобслуживании для VIN: {}", record.getVin());
         MaintenanceRecord savedRecord = maintenanceRecordRepository.save(record);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedRecord);
@@ -94,7 +98,7 @@ public class MaintenanceController {
      */
     @PostMapping("/planned")
     @ApiOperation(value = "Schedule a new maintenance task", notes = "Create a new maintenance task for a vehicle.")
-    public ResponseEntity<PlannedMaintenance> scheduleMaintenance(@RequestBody PlannedMaintenance maintenance) {
+    public ResponseEntity<PlannedMaintenance> scheduleMaintenance(@Valid @RequestBody PlannedMaintenance maintenance) {
         logger.info("Запланирована новая работа '{}' для автомобиля с VIN: {}", maintenance.getJobName(), maintenance.getCar().getVin());
         PlannedMaintenance savedMaintenance = plannedMaintenanceRepository.save(maintenance);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedMaintenance);

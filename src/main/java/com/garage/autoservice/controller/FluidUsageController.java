@@ -4,6 +4,8 @@ import com.garage.autoservice.dto.FluidUsageRequest;
 import com.garage.autoservice.entity.FluidUsage;
 import com.garage.autoservice.exception.ResourceNotFoundException;
 import com.garage.autoservice.service.FluidUsageService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +37,7 @@ public class FluidUsageController {
      * @return созданная запись
      */
     @PostMapping
-    public ResponseEntity<FluidUsage> createFluidUsage(@RequestBody FluidUsageRequest fluidUsageRequest) {
+    public ResponseEntity<FluidUsage> createFluidUsage(@Valid @RequestBody FluidUsageRequest fluidUsageRequest) {
         logger.info("Запрос на создание новой записи о расходе рабочей жидкости: {}", fluidUsageRequest);
         FluidUsage createdFluidUsage = fluidUsageService.createFluidUsage(fluidUsageRequest);
         logger.debug("Создана запись о расходе рабочей жидкости с ID: {}", createdFluidUsage.getId());
@@ -61,7 +63,7 @@ public class FluidUsageController {
      * @return найденная запись
      */
     @GetMapping("/{id}")
-    public ResponseEntity<FluidUsage> getFluidUsageById(@PathVariable Long id) {
+    public ResponseEntity<FluidUsage> getFluidUsageById(@PathVariable @NotNull Long id) {
         logger.info("Запрос на получение записи о расходе рабочей жидкости с ID: {}", id);
         FluidUsage fluidUsage = fluidUsageService.getFluidUsageById(id)
                 .orElseThrow(() -> {
@@ -79,7 +81,7 @@ public class FluidUsageController {
      * @return обновленная запись
      */
     @PutMapping("/{id}")
-    public ResponseEntity<FluidUsage> updateFluidUsage(@PathVariable Long id, @RequestBody FluidUsageRequest fluidUsageRequest) {
+    public ResponseEntity<FluidUsage> updateFluidUsage(@PathVariable @NotNull Long id, @Valid @RequestBody FluidUsageRequest fluidUsageRequest) {
         logger.info("Запрос на обновление записи о расходе рабочей жидкости с ID: {}", id);
         FluidUsage updatedFluidUsage = fluidUsageService.updateFluidUsage(id, fluidUsageRequest);
         logger.debug("Запись о расходе рабочей жидкости с ID {} обновлена", id);
@@ -93,7 +95,7 @@ public class FluidUsageController {
      * @return статус выполнения
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFluidUsage(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteFluidUsage(@PathVariable @NotNull Long id) {
         logger.info("Запрос на удаление записи о расходе рабочей жидкости с ID: {}", id);
         fluidUsageService.deleteFluidUsage(id);
         logger.debug("Запись о расходе рабочей жидкости с ID {} успешно удалена", id);

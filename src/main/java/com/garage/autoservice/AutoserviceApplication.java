@@ -1,5 +1,7 @@
 package com.garage.autoservice;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -8,6 +10,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
  * Основной класс Spring Boot приложения для управления автосервисом.
  * Этот класс используется для запуска приложения.
  */
+//@OpenAPIDefinition(info = @Info(title = "My API", version = "v1"))
 @SpringBootApplication
 @EntityScan(basePackages = {"com.garage.autoservice.entity"})
 public class AutoserviceApplication {

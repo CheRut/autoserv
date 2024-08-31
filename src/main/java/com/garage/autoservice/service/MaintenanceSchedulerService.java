@@ -23,17 +23,22 @@ public class MaintenanceSchedulerService {
 
     private static final Logger logger = LoggerFactory.getLogger(MaintenanceSchedulerService.class);
 
-    @Autowired
-    private CarRepository carRepository;
+    private final CarRepository carRepository;
+    private final MaintenanceRecordRepository maintenanceRecordRepository;
+    private final PlannedMaintenanceRepository plannedMaintenanceRepository;
 
     @Autowired
-    private MaintenanceRecordRepository maintenanceRecordRepository;
-
-    @Autowired
-    private PlannedMaintenanceRepository plannedMaintenanceRepository;
+    public MaintenanceSchedulerService(CarRepository carRepository,
+                                       MaintenanceRecordRepository maintenanceRecordRepository,
+                                       PlannedMaintenanceRepository plannedMaintenanceRepository) {
+        this.carRepository = carRepository;
+        this.maintenanceRecordRepository = maintenanceRecordRepository;
+        this.plannedMaintenanceRepository = plannedMaintenanceRepository;
+    }
 
     /**
      * Метод для запуска планирования технического обслуживания для всех автомобилей.
+     * Он проходит по всем автомобилям и проверяет, не наступил ли момент для планирования новой работы.
      */
     public void scheduleMaintenance() {
         logger.info("Запуск планирования технического обслуживания...");
@@ -60,19 +65,22 @@ public class MaintenanceSchedulerService {
      * @return true, если требуется запланировать новую работу, иначе false
      */
     private boolean shouldScheduleNewJob(Car car, MaintenanceRecord record) {
-        Long currentMileage = car.getMileage(); // Измените тип на Long
+        Long currentMileage = car.getMileage();
         Long currentHours = car.getEngineHours() != null ? car.getEngineHours() : 0L;
         Date currentDate = new Date();
 
+        // Проверка интервала по пробегу
         if (record.getIntervalMileage() != null && currentMileage != null
                 && currentMileage - record.getMileage() >= record.getIntervalMileage()) {
             return true;
         }
 
+        // Проверка интервала по моточасам
         if (record.getIntervalHours() != null && currentHours - record.getHours() >= record.getIntervalHours()) {
             return true;
         }
 
+        // Проверка интервала по времени
         if (record.getIntervalDays() != null) {
             long daysSinceLastJob = (currentDate.getTime() - record.getDate().getTime()) / (1000 * 60 * 60 * 24);
             if (daysSinceLastJob >= record.getIntervalDays()) {
@@ -83,7 +91,6 @@ public class MaintenanceSchedulerService {
         // Если все интервалы пустые, работа выполнялась по необходимости, не планируем
         return false;
     }
-
 
     /**
      * Планирует новую работу для указанного автомобиля.

@@ -1,6 +1,9 @@
 package com.garage.autoservice.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,29 +20,78 @@ import java.util.List;
 @AllArgsConstructor
 public class MaintenanceRecord {
 
+    /**
+     * Автомобиль, к которому относится запись о ремонте.
+     */
     @ManyToOne
     @JoinColumn(name = "car_id")
+    @NotNull(message = "Автомобиль не может быть пустым")
     private Car car;
 
+    /**
+     * Уникальный идентификатор записи о ремонте.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String vin;  // VIN-код автомобиля
-    private String jobName;  // Наименование работы
-    private int mileage;  // Пробег на момент проведения работы
-    private int hours;  // Моточасы на момент проведения работы
-    private Date date;  // Дата проведения работы
+    /**
+     * VIN-код автомобиля.
+     */
+    @NotBlank(message = "VIN-код не может быть пустым")
+    private String vin;
 
-    @OneToMany(mappedBy = "maintenanceRecord", cascade = CascadeType.ALL)
-    private List<UsedParts> usedParts;  // Список использованных запчастей
+    /**
+     * Наименование выполненной работы.
+     */
+    @NotBlank(message = "Наименование работы не может быть пустым")
+    private String jobName;
 
-    @OneToMany(mappedBy = "maintenanceRecord", cascade = CascadeType.ALL)
-    private List<UsedFluid> usedFluids;  // Список использованных жидкостей
+    /**
+     * Пробег автомобиля на момент проведения работы (в километрах).
+     */
+    @Min(value = 0, message = "Пробег не может быть отрицательным")
+    private int mileage;
 
-    // Добавление интервалов
-    private Integer intervalMileage;  // Интервал по пробегу (км)
-    private Integer intervalHours;  // Интервал по моточасам
-    private Integer intervalDays;  // Интервал по дням
+    /**
+     * Моточасы на момент проведения работы.
+     */
+    @Min(value = 0, message = "Моточасы не могут быть отрицательными")
+    private int hours;
 
+    /**
+     * Дата проведения работы.
+     */
+    @NotNull(message = "Дата проведения работы не может быть пустой")
+    private Date date;
+
+    /**
+     * Список использованных запчастей.
+     */
+    @OneToMany(mappedBy = "maintenanceRecord", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UsedParts> usedParts;
+
+    /**
+     * Список использованных жидкостей.
+     */
+    @OneToMany(mappedBy = "maintenanceRecord", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UsedFluid> usedFluids;
+
+    /**
+     * Интервал по пробегу для планирования следующей работы (в километрах).
+     */
+    @Min(value = 0, message = "Интервал по пробегу не может быть отрицательным")
+    private Integer intervalMileage;
+
+    /**
+     * Интервал по моточасам для планирования следующей работы.
+     */
+    @Min(value = 0, message = "Интервал по моточасам не может быть отрицательным")
+    private Integer intervalHours;
+
+    /**
+     * Интервал по времени для планирования следующей работы (в днях).
+     */
+    @Min(value = 0, message = "Интервал по времени не может быть отрицательным")
+    private Integer intervalDays;
 }

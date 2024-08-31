@@ -58,6 +58,7 @@ public class MaintenanceControllerTest {
         record.setMileage(10000);
         record.setHours(500);
         record.setDate(new Date());
+        record.setVin(car.getVin());
 
         plannedMaintenance = new PlannedMaintenance();
         plannedMaintenance.setId(1L);

@@ -1,6 +1,8 @@
 package com.garage.autoservice.repository;
 
 import com.garage.autoservice.entity.Part;
+
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,9 +61,13 @@ public class PartRepositoryTest {
     }
 
     @Test
-    public void testVinNotNullConstraint() {
-        part.setVin(null); // Попытка сохранить Part без VIN
-        assertThrows(DataIntegrityViolationException.class, () -> {
+    void testVinNotNullConstraint() {
+        Part part = new Part();
+        part.setName("Test Part");
+        part.setManufacturer("Test Manufacturer");
+        // part.setVin(null);  // Оставляем VIN пустым для теста
+
+        assertThrows(ConstraintViolationException.class, () -> {
             partRepository.save(part);
         });
     }

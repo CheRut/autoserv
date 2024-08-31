@@ -4,6 +4,8 @@ import com.garage.autoservice.dto.PartRequest;
 import com.garage.autoservice.entity.Part;
 import com.garage.autoservice.exception.ResourceNotFoundException;
 import com.garage.autoservice.repository.PartRepository;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +46,7 @@ public class PartController {
      * @return созданная запчасть
      */
     @PostMapping
-    public Part createPart(@RequestBody PartRequest request) {
+    public Part createPart(@Valid @RequestBody PartRequest request) {
         logger.info("Создание новой запчасти с параметрами: {}", request);
 
         Part part = new Part();
@@ -67,7 +69,7 @@ public class PartController {
      * @return список созданных запчастей
      */
     @PostMapping("/batch")
-    public List<Part> createParts(@RequestBody List<PartRequest> requests) {
+    public List<Part> createParts(@Valid @RequestBody List<PartRequest> requests) {
         logger.info("Создание нескольких запчастей (batch)");
         return requests.stream().map(request -> {
             Part part = new Part();
@@ -91,7 +93,7 @@ public class PartController {
      * @return объект {@link ResponseEntity}, содержащий запчасть или статус 404, если запчасть не найдена
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Part> getPartById(@PathVariable Long id) {
+    public ResponseEntity<Part> getPartById(@NotNull @PathVariable Long id) {
         logger.info("Запрос на получение запчасти с ID: {}", id);
         Part part = partRepository.findById(id)
                 .orElseThrow(() -> {
@@ -109,7 +111,7 @@ public class PartController {
      * @return объект {@link ResponseEntity}, содержащий обновленную запчасть или статус 404, если запчасть не найдена
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Part> updatePart(@PathVariable Long id, @RequestBody Part partDetails) {
+    public ResponseEntity<Part> updatePart(@NotNull @PathVariable Long id, @Valid @RequestBody Part partDetails) {
         logger.info("Запрос на обновление запчасти с ID: {}", id);
         Part part = partRepository.findById(id)
                 .orElseThrow(() -> {
@@ -139,7 +141,7 @@ public class PartController {
      * @return объект {@link ResponseEntity} со статусом 200, если удаление успешно, или статус 404, если запчасть не найдена
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePart(@PathVariable Long id) {
+    public ResponseEntity<Void> deletePart(@NotNull @PathVariable Long id) {
         logger.info("Запрос на удаление запчасти с ID: {}", id);
         Part part = partRepository.findById(id)
                 .orElseThrow(() -> {

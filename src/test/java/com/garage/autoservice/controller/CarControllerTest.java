@@ -107,16 +107,7 @@ public class CarControllerTest {
                 .andExpect(jsonPath("$.id").value(car.getId()));
     }
 
-//    @Test
-//    void testGetCarById_NotFound() throws Exception {
-//        when(carRepository.findById(1L)).thenReturn(Optional.empty());
-//
-//        mockMvc.perform(get("/api/cars/1")
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isNotFound())
-//                .andExpect(jsonPath("$.message").value("Автомобиль с ID 1 не найден"))
-//                .andExpect(jsonPath("$.details").exists());
-//    }
+
 
     @Test
     void testUpdateCar() throws Exception {
@@ -132,20 +123,7 @@ public class CarControllerTest {
                 .andExpect(jsonPath("$.make").value("Honda"));
     }
 
-//    @Test
-//    void testUpdateCar_NotFound() throws Exception {
-//        when(carRepository.findById(1L)).thenReturn(Optional.empty());
-//
-//        car.setMake("Honda");
-//
-//        mockMvc.perform(put("/api/cars/1")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(car))
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isNotFound())
-//                .andExpect(jsonPath("$.message").value("Автомобиль с ID 1 не найден"))
-//                .andExpect(jsonPath("$.details").exists());
-//    }
+
 
     @Test
     void testDeleteCar() throws Exception {
@@ -158,14 +136,5 @@ public class CarControllerTest {
         verify(carRepository, times(1)).delete(car);
     }
 
-//    @Test
-//    void testDeleteCar_NotFound() throws Exception {
-//        when(carRepository.findById(1L)).thenReturn(Optional.empty());
-//
-//        mockMvc.perform(delete("/api/cars/1")
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isNotFound())
-//                .andExpect(jsonPath("$.message").value("Автомобиль с ID 1 не найден"))
-//                .andExpect(jsonPath("$.details").exists());
-//    }
+
 }
