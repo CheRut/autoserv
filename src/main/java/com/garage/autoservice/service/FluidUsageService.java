@@ -119,4 +119,5 @@ public class FluidUsageService {
         fluidUsage.setDate(fluidUsageRequest.getDate());
         return fluidUsage;
     }
+
 }

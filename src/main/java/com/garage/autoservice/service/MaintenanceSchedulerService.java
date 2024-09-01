@@ -44,10 +44,12 @@ public class MaintenanceSchedulerService {
         logger.info("Запуск планирования технического обслуживания...");
 
         List<Car> cars = carRepository.findAll();
+        Date currentDate = new Date();
+
         for (Car car : cars) {
             List<MaintenanceRecord> records = maintenanceRecordRepository.findByCar(car);
             for (MaintenanceRecord record : records) {
-                if (shouldScheduleNewJob(car, record)) {
+                if (shouldScheduleNewJob(car, record, currentDate)) {
                     scheduleNewJob(car, record.getJobName());
                 }
             }
@@ -60,35 +62,35 @@ public class MaintenanceSchedulerService {
      * Проверяет, нужно ли планировать новую работу для указанного автомобиля на основе
      * записей о предыдущих работах и интервалов.
      *
-     * @param car    автомобиль, для которого проводится проверка
-     * @param record запись о выполненной работе
+     * @param car         автомобиль, для которого проводится проверка
+     * @param record      запись о выполненной работе
+     * @param currentDate текущая дата
      * @return true, если требуется запланировать новую работу, иначе false
      */
-    private boolean shouldScheduleNewJob(Car car, MaintenanceRecord record) {
+    private boolean shouldScheduleNewJob(Car car, MaintenanceRecord record, Date currentDate) {
         Long currentMileage = car.getMileage();
         Long currentHours = car.getEngineHours() != null ? car.getEngineHours() : 0L;
-        Date currentDate = new Date();
 
-        // Проверка интервала по пробегу
-        if (record.getIntervalMileage() != null && currentMileage != null
-                && currentMileage - record.getMileage() >= record.getIntervalMileage()) {
-            return true;
-        }
+        return checkMileageInterval(record, currentMileage) ||
+                checkHoursInterval(record, currentHours) ||
+                checkDateInterval(record, currentDate);
+    }
 
-        // Проверка интервала по моточасам
-        if (record.getIntervalHours() != null && currentHours - record.getHours() >= record.getIntervalHours()) {
-            return true;
-        }
+    private boolean checkMileageInterval(MaintenanceRecord record, Long currentMileage) {
+        return record.getIntervalMileage() != null && currentMileage != null &&
+                currentMileage - record.getMileage() >= record.getIntervalMileage();
+    }
 
-        // Проверка интервала по времени
+    private boolean checkHoursInterval(MaintenanceRecord record, Long currentHours) {
+        return record.getIntervalHours() != null &&
+                currentHours - record.getHours() >= record.getIntervalHours();
+    }
+
+    private boolean checkDateInterval(MaintenanceRecord record, Date currentDate) {
         if (record.getIntervalDays() != null) {
             long daysSinceLastJob = (currentDate.getTime() - record.getDate().getTime()) / (1000 * 60 * 60 * 24);
-            if (daysSinceLastJob >= record.getIntervalDays()) {
-                return true;
-            }
+            return daysSinceLastJob >= record.getIntervalDays();
         }
-
-        // Если все интервалы пустые, работа выполнялась по необходимости, не планируем
         return false;
     }
 

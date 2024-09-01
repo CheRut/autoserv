@@ -35,10 +35,10 @@ public class Car implements Serializable {
     private Long id;
 
     /**
-     * Серийный номер автомобиля.
+     * инвентарный номер как единицы имущества предприятия.
      */
-    @NotBlank(message = "Серийный номер не может быть пустым")
-    @Size(max = 50, message = "Серийный номер не может превышать 50 символов")
+    @NotBlank(message = "инвентарный номер не может быть пустым")
+    @Size(max = 50, message = "инвентарный номер не может превышать 50 символов")
     private String serialNumber;
 
     /**
@@ -127,8 +127,8 @@ public class Car implements Serializable {
     /**
      * Тип автомобиля (например, легковой автомобиль, грузовик, автобус, сельскохозяйственная техника).
      */
-    @Enumerated(EnumType.STRING)
-    @NotNull(message = "Тип автомобиля не может быть пустым")
+//    @Enumerated(EnumType.STRING)
+//    @NotNull(message = "Тип автомобиля не может быть пустым")
     private CarType carType;
 
     /**

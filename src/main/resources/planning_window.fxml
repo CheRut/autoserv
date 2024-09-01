@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.garage.autoservice.ui.PlanningController">
+    <center>
+        <TableView fx:id="repairJobTable">
+            <columns>
+                <TableColumn fx:id="jobNameColumn" text="Job Name"/>
+                <TableColumn fx:id="intervalInMileageColumn" text="Interval in Mileage"/>
+                <TableColumn fx:id="intervalInHoursColumn" text="Interval in Hours"/>
+                <TableColumn fx:id="intervalInDaysColumn" text="Interval in Days"/>
+                <TableColumn fx:id="lastMileageColumn" text="Last Mileage"/>
+                <TableColumn fx:id="lastJobDateColumn" text="Last Job Date"/>
+                <TableColumn fx:id="serialNumberColumn" text="Serial Number"/>
+            </columns>
+        </TableView>
+    </center>
+    <bottom>
+        <HBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Button fx:id="addButton" text="Add"/>
+            <Button fx:id="deleteButton" text="Delete"/>
+            <Button fx:id="editButton" text="Edit"/>
+        </HBox>
+    </bottom>
+    <top>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <TextField fx:id="jobNameField" promptText="Job Name"/>
+            <TextField fx:id="intervalInMileageField" promptText="Interval in Mileage"/>
+            <TextField fx:id="intervalInHoursField" promptText="Interval in Hours"/>
+            <TextField fx:id="intervalInDaysField" promptText="Interval in Days"/>
+            <TextField fx:id="lastMileageField" promptText="Last Mileage"/>
+            <TextField fx:id="lastJobDateField" promptText="Last Job Date"/>
+            <TextField fx:id="serialNumberField" promptText="Serial Number"/>
+        </VBox>
+    </top>
+</BorderPane>

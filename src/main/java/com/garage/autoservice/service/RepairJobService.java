@@ -2,6 +2,7 @@ package com.garage.autoservice.service;
 
 import com.garage.autoservice.dto.PartRequest;
 import com.garage.autoservice.dto.RepairJobRequest;
+import com.garage.autoservice.entity.Car;
 import com.garage.autoservice.entity.Part;
 import com.garage.autoservice.entity.RepairJob;
 import com.garage.autoservice.exception.InvalidRequestException;
@@ -156,7 +157,7 @@ public class RepairJobService {
     /**
      * Обрабатывает и сохраняет список запчастей, указанных в запросе.
      *
-     * @param partRequests список данных о запчастях
+     * @param partRequest список данных о запчастях
      * @return список сохраненных запчастей
      */
     private Part createOrUpdatePart(@Valid PartRequest partRequest) {
@@ -198,5 +199,33 @@ public class RepairJobService {
         logger.info("Получение ремонтных работ для автомобиля с серийным номером {} за период с {} по {}",
                 serialNumber, startDate, endDate);
         return repairJobRepository.findAllBySerialNumberAndLastJobDateBetween(serialNumber, startDate, endDate);
+    }
+
+    /**
+     * Сохраняет или обновляет информацию о работах в базе данных.
+     *
+     * @param repairJob объект RepairJob для сохранения
+     * @return сохраненный объект RepairJob
+     */
+    public RepairJob save(RepairJob repairJob) {
+        return repairJobRepository.save(repairJob);
+    }
+
+    /**
+     * Удаляет информацию о работе из базы данных.
+     *
+     * @param repairJob объект RepairJob для удаления
+     */
+    public void delete(RepairJob repairJob) {
+        repairJobRepository.delete(repairJob);
+    }
+
+    /**
+     * Получает список всех работ из базы данных.
+     *
+     * @return список объектов RepairJob
+     */
+    public List<RepairJob> findAll() {
+        return repairJobRepository.findAll();
     }
 }

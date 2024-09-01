@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.garage.autoservice.ui.CompletedJobsControllerJFX">
+    <center>
+        <TableView fx:id="maintenanceRecordTable">
+            <columns>
+                <TableColumn fx:id="vinColumn" text="VIN"/>
+                <TableColumn fx:id="jobNameColumn" text="Job Name"/>
+                <TableColumn fx:id="mileageColumn" text="Mileage"/>
+                <TableColumn fx:id="hoursColumn" text="Hours"/>
+                <TableColumn fx:id="dateColumn" text="Date"/>
+                <TableColumn fx:id="intervalMileageColumn" text="Interval Mileage"/>
+                <TableColumn fx:id="intervalHoursColumn" text="Interval Hours"/>
+                <TableColumn fx:id="intervalDaysColumn" text="Interval Days"/>
+            </columns>
+        </TableView>
+    </center>
+    <bottom>
+        <HBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Button fx:id="addButton" text="Add"/>
+            <Button fx:id="deleteButton" text="Delete"/>
+            <Button fx:id="editButton" text="Edit"/>
+        </HBox>
+    </bottom>
+    <top>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <TextField fx:id="vinField" promptText="VIN"/>
+            <TextField fx:id="jobNameField" promptText="Job Name"/>
+            <TextField fx:id="mileageField" promptText="Mileage"/>
+            <TextField fx:id="hoursField" promptText="Hours"/>
+            <TextField fx:id="dateField" promptText="Date"/>
+            <TextField fx:id="intervalMileageField" promptText="Interval Mileage"/>
+            <TextField fx:id="intervalHoursField" promptText="Interval Hours"/>
+            <TextField fx:id="intervalDaysField" promptText="Interval Days"/>
+        </VBox>
+    </top>
+</BorderPane>

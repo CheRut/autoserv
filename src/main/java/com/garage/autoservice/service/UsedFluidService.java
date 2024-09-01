@@ -1,5 +1,6 @@
 package com.garage.autoservice.service;
 
+import com.garage.autoservice.entity.Car;
 import com.garage.autoservice.entity.UsedFluid;
 import com.garage.autoservice.exception.ResourceNotFoundException;
 import com.garage.autoservice.repository.UsedFluidRepository;
@@ -93,5 +94,32 @@ public class UsedFluidService {
         logger.info("Удаление записи об использованной жидкости с ID: {}", id);
         usedFluidRepository.delete(usedFluid);
         logger.debug("Запись об использованной жидкости с ID {} успешно удалена", id);
+    }
+    /**
+     * Сохраняет или обновляет информацию о ГСМ в базе данных.
+     *
+     * @param usedFluid объект UsedFluid для сохранения
+     * @return сохраненный объект UsedFluid
+     */
+    public UsedFluid save(UsedFluid usedFluid) {
+        return usedFluidRepository.save(usedFluid);
+    }
+
+    /**
+     * Удаляет информацию о ГСМ из базы данных.
+     *
+     * @param usedFluid объект Car для удаления
+     */
+    public void delete(UsedFluid usedFluid) {
+        usedFluidRepository.delete(usedFluid);
+    }
+
+    /**
+     * Получает список всех жидкостей из базы данных.
+     *
+     * @return список объектов UsedFluid
+     */
+    public List<UsedFluid> findAll() {
+        return usedFluidRepository.findAll();
     }
 }

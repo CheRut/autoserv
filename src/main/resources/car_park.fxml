@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.garage.autoservice.ui.CarParkController">
+    <center>
+        <TableView fx:id="carTable">
+            <columns>
+                <TableColumn fx:id="serialNumberColumn" text="Serial Number"/>
+                <TableColumn fx:id="enterpriseNumberColumn" text="Enterprise Number"/>
+                <TableColumn fx:id="vinColumn" text="VIN"/>
+                <TableColumn fx:id="licensePlateColumn" text="License Plate"/>
+                <TableColumn fx:id="makeColumn" text="Make"/>
+                <TableColumn fx:id="modelColumn" text="Model"/>
+                <TableColumn fx:id="engineTypeColumn" text="Engine Type"/>
+                <TableColumn fx:id="engineNumberColumn" text="Engine Number"/>
+                <TableColumn fx:id="transmissionTypeColumn" text="Transmission Type"/>
+                <TableColumn fx:id="transmissionNumberColumn" text="Transmission Number"/>
+                <TableColumn fx:id="yearOfManufactureColumn" text="Year of Manufacture"/>
+                <TableColumn fx:id="mileageColumn" text="Mileage"/>
+                <TableColumn fx:id="engineHoursColumn" text="Engine Hours"/>
+                <TableColumn fx:id="carTypeColumn" text="Car Type"/>
+            </columns>
+        </TableView>
+    </center>
+    <bottom>
+        <HBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Button fx:id="addButton" text="Add" onAction="#addCar"/>
+            <Button fx:id="deleteButton" text="Delete" onAction="#deleteCar"/>
+            <Button fx:id="editButton" text="Edit"/>
+        </HBox>
+    </bottom>
+    <top>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <TextField fx:id="serialNumberField" promptText="Serial Number"/>
+            <TextField fx:id="enterpriseNumberField" promptText="Enterprise Number"/>
+            <TextField fx:id="vinField" promptText="VIN"/>
+            <TextField fx:id="licensePlateField" promptText="License Plate"/>
+            <TextField fx:id="makeField" promptText="Make"/>
+            <TextField fx:id="modelField" promptText="Model"/>
+            <TextField fx:id="engineTypeField" promptText="Engine Type"/>
+            <TextField fx:id="engineNumberField" promptText="Engine Number"/>
+            <TextField fx:id="transmissionTypeField" promptText="Transmission Type"/>
+            <TextField fx:id="transmissionNumberField" promptText="Transmission Number"/>
+            <TextField fx:id="yearOfManufactureField" promptText="Year of Manufacture"/>
+            <TextField fx:id="mileageField" promptText="Mileage"/>
+            <TextField fx:id="engineHoursField" promptText="Engine Hours"/>
+            <TextField fx:id="carTypeField" promptText="Car Type"/>
+        </VBox>
+    </top>
+</BorderPane>

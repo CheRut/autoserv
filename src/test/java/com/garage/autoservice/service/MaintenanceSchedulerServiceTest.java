@@ -31,7 +31,7 @@ class MaintenanceSchedulerServiceTest {
     private PlannedMaintenanceRepository plannedMaintenanceRepository;
 
     @InjectMocks
-    private MaintenanceSchedulerService maintenanceSchedulerService;
+    private  MaintenanceSchedulerService maintenanceSchedulerService;
 
     @BeforeEach
     void setUp() {

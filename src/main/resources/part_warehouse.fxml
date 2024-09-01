@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.garage.autoservice.ui.PartControllerJFX">
+    <center>
+        <TableView fx:id="partTable">
+            <columns>
+                <TableColumn fx:id="nameColumn" text="Name"/>
+                <TableColumn fx:id="manufacturerColumn" text="Manufacturer"/>
+                <TableColumn fx:id="partNumberColumn" text="Part Number"/>
+                <TableColumn fx:id="quantityColumn" text="Quantity"/>
+                <TableColumn fx:id="cardNumberColumn" text="Card Number"/>
+                <TableColumn fx:id="vinColumn" text="VIN"/>
+            </columns>
+        </TableView>
+    </center>
+    <bottom>
+        <HBox spacing="10" padding="10">
+            <Button fx:id="addButton" text="Add"/>
+            <Button fx:id="deleteButton" text="Delete"/>
+            <Button fx:id="editButton" text="Edit"/>
+        </HBox>
+    </bottom>
+    <top>
+        <VBox spacing="10" padding="10">
+            <TextField fx:id="nameField" promptText="Name"/>
+            <TextField fx:id="manufacturerField" promptText="Manufacturer"/>
+            <TextField fx:id="partNumberField" promptText="Part Number"/>
+            <TextField fx:id="quantityField" promptText="Quantity"/>
+            <TextField fx:id="cardNumberField" promptText="Card Number"/>
+            <TextField fx:id="vinField" promptText="VIN"/>
+        </VBox>
+    </top>
+</BorderPane>

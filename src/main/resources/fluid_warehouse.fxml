@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.garage.autoservice.ui.FluidControllerJFX">
+    <center>
+        <TableView fx:id="fluidTable">
+            <columns>
+                <TableColumn fx:id="typeColumn" text="Type"/>
+                <TableColumn fx:id="brandColumn" text="Brand"/>
+                <TableColumn fx:id="volumeColumn" text="Volume"/>
+                <TableColumn fx:id="cardNumberColumn" text="Card Number"/>
+            </columns>
+        </TableView>
+    </center>
+    <bottom>
+        <HBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Button fx:id="addButton" text="Add"/>
+            <Button fx:id="deleteButton" text="Delete"/>
+            <Button fx:id="editButton" text="Edit"/>
+        </HBox>
+    </bottom>
+    <top>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <TextField fx:id="typeField" promptText="Type"/>
+            <TextField fx:id="brandField" promptText="Brand"/>
+            <TextField fx:id="volumeField" promptText="Volume"/>
+            <TextField fx:id="cardNumberField" promptText="Card Number"/>
+        </VBox>
+    </top>
+</BorderPane>
