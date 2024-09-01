@@ -1,8 +1,10 @@
 package com.garage.autoservice.service;
 
 import com.garage.autoservice.entity.Car;
+import com.garage.autoservice.entity.MaintenanceRecord;
 import com.garage.autoservice.entity.UsedFluid;
 import com.garage.autoservice.exception.ResourceNotFoundException;
+import com.garage.autoservice.repository.MaintenanceRecordRepository;
 import com.garage.autoservice.repository.UsedFluidRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Сервис для работы с записями об использованных жидкостях.
@@ -22,7 +25,8 @@ import java.util.List;
 public class UsedFluidService {
 
     private static final Logger logger = LoggerFactory.getLogger(UsedFluidService.class);
-
+    @Autowired
+    private MaintenanceRecordRepository maintenanceRecordRepository;
     @Autowired
     private UsedFluidRepository usedFluidRepository;
 
@@ -121,5 +125,13 @@ public class UsedFluidService {
      */
     public List<UsedFluid> findAll() {
         return usedFluidRepository.findAll();
+    }
+
+    public Optional<UsedFluid> findByCardNumber(String cardNumber) {
+        return usedFluidRepository.findByCardNumber(cardNumber);
+    }
+
+    public void saveMaintenanceRecord(MaintenanceRecord maintenanceRecord) {
+        maintenanceRecordRepository.save(maintenanceRecord);
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Репозиторий для управления сущностями {@link RepairJob}.
@@ -24,4 +25,5 @@ public interface RepairJobRepository extends JpaRepository<RepairJob, Long> {
      */
     List<RepairJob> findAllBySerialNumberAndLastJobDateBetween(String serialNumber, LocalDate startDate, LocalDate endDate);
 
+    Optional<RepairJob> findBySerialNumber(String serialNumber);
 }

@@ -13,10 +13,10 @@
     <center>
         <TableView fx:id="fluidTable">
             <columns>
-                <TableColumn fx:id="typeColumn" text="Type"/>
-                <TableColumn fx:id="brandColumn" text="Brand"/>
-                <TableColumn fx:id="volumeColumn" text="Volume"/>
+                <TableColumn fx:id="nameColumn" text="Name"/>
+                <TableColumn fx:id="quantityColumn" text="Quantity"/>
                 <TableColumn fx:id="cardNumberColumn" text="Card Number"/>
+                <TableColumn fx:id="typeColumn" text="Type"/>
             </columns>
         </TableView>
     </center>
@@ -25,9 +25,9 @@
             <padding>
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
-            <Button fx:id="addButton" text="Add"/>
-            <Button fx:id="deleteButton" text="Delete"/>
-            <Button fx:id="editButton" text="Edit"/>
+            <Button fx:id="addButton" text="Add" onAction="#addFluid"/>
+            <Button fx:id="deleteButton" text="Delete" onAction="#deleteFluid"/>
+            <Button fx:id="editButton" text="Edit" onAction="#editFluid"/>
         </HBox>
     </bottom>
     <top>
@@ -35,10 +35,11 @@
             <padding>
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
-            <TextField fx:id="typeField" promptText="Type"/>
-            <TextField fx:id="brandField" promptText="Brand"/>
-            <TextField fx:id="volumeField" promptText="Volume"/>
+            <TextField fx:id="nameField" promptText="Name"/>
+            <TextField fx:id="quantityField" promptText="Quantity"/>
             <TextField fx:id="cardNumberField" promptText="Card Number"/>
+            <TextField fx:id="typeField" promptText="Type"/>
+            <TextField fx:id="searchField" promptText="Search by Card Number"/>
         </VBox>
     </top>
 </BorderPane>

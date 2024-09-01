@@ -28,7 +28,7 @@ public class RepairJob {
     @Positive(message = "Интервал по пробегу должен быть положительным числом")
     private Long intervalInMileage;
 
-    @Positive(message = "Интервал по моточасам должен быть положительным числом")
+    @Min(value = 0, message = "Интервал по моточасам должен быть не меньше 0")
     private Long intervalInHours;
 
     @Positive(message = "Интервал по дням должен быть положительным числом")
@@ -36,9 +36,11 @@ public class RepairJob {
 
     @Positive(message = "Последний пробег должен быть положительным числом")
     private Long lastMileage;
-
+    @NotNull(message = "Дата последнего проведения работы не может быть null")
     private LocalDate lastJobDate;
 
+    @Min(value = 0, message = "Интервал по моточасам должен быть не меньше 0")
+    private Long lastHours;
     @NotBlank(message = "Серийный номер не может быть пустым")
     private String serialNumber;
 
@@ -58,6 +60,14 @@ public class RepairJob {
     public void setId(Long id) {
         logger.debug("Установка ID: {}", id);
         this.id = id;
+    }
+
+    public Long getLastHours() {
+        return lastHours;
+    }
+
+    public void setLastHours(Long lastHours) {
+        this.lastHours = lastHours;
     }
 
     public String getJobName() {

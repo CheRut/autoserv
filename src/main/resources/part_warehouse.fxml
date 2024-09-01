@@ -23,14 +23,21 @@
         </TableView>
     </center>
     <bottom>
-        <HBox spacing="10" padding="10">
-            <Button fx:id="addButton" text="Add"/>
-            <Button fx:id="deleteButton" text="Delete"/>
-            <Button fx:id="editButton" text="Edit"/>
+        <HBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Button fx:id="addButton" text="Add" onAction="#addPart"/>
+            <Button fx:id="deleteButton" text="Delete" onAction="#deletePart"/>
+            <Button fx:id="editButton" text="Edit" onAction="#editPart"/>
         </HBox>
     </bottom>
     <top>
-        <VBox spacing="10" padding="10">
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <TextField fx:id="searchField" promptText="Search by Card Number"/> <!-- Поле для поиска -->
             <TextField fx:id="nameField" promptText="Name"/>
             <TextField fx:id="manufacturerField" promptText="Manufacturer"/>
             <TextField fx:id="partNumberField" promptText="Part Number"/>

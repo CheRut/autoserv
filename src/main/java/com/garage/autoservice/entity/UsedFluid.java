@@ -32,7 +32,7 @@ public class UsedFluid {
      * Связь с записью о проведенном техническом обслуживании.
      */
     @ManyToOne
-    @JoinColumn(name = "maintenance_record_id")
+    @JoinColumn(name = "maintenance_record_id",nullable = true)
     @NotNull(message = "Запись о техобслуживании не может быть null")
     private MaintenanceRecord maintenanceRecord;
 

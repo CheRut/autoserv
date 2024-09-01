@@ -89,4 +89,8 @@ public class PartService {
         logger.debug("Все запчасти доступны.");
         return true;
     }
+
+    public Optional<Part> findByCardNumber(int cardNumber) {
+        return partRepository.findByCardNumber(cardNumber);
+    }
 }

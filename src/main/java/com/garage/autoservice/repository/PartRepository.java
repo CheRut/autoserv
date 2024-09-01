@@ -44,4 +44,6 @@ public interface PartRepository extends JpaRepository<Part, Long> {
     Optional<Part> findByNameAndManufacturerAndPartNumber(@Param("name") String name,
                                                           @Param("manufacturer") String manufacturer,
                                                           @Param("partNumber") String partNumber);
+
+    Optional<Part> findByCardNumber(Integer cardNumber);
 }

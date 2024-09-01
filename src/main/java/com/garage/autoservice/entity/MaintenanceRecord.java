@@ -24,8 +24,8 @@ public class MaintenanceRecord {
      * Автомобиль, к которому относится запись о ремонте.
      */
     @ManyToOne
-    @JoinColumn(name = "car_id")
-    @NotNull(message = "Автомобиль не может быть пустым")
+    @JoinColumn(name = "car_id",nullable = true)
+//    @NotNull(message = "Автомобиль не может быть пустым")
     private Car car;
 
     /**

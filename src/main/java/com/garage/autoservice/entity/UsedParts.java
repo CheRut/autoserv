@@ -32,8 +32,8 @@ public class UsedParts {
      * Связь с записью о проведенном техническом обслуживании.
      */
     @ManyToOne
-    @JoinColumn(name = "maintenance_record_id")
-    @NotNull(message = "Запись о техобслуживании не может быть null")
+    @JoinColumn(name = "maintenance_record_id",nullable = true)
+//    @NotNull(message = "Запись о техобслуживании не может быть null")
     private MaintenanceRecord maintenanceRecord;
 
     /**

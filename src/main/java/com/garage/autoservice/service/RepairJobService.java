@@ -58,6 +58,7 @@ public class RepairJobService {
         repairJob.setLastMileage(request.getLastMileage());
         repairJob.setLastJobDate(request.getLastJobDate());
         repairJob.setSerialNumber(request.getSerialNumber());
+        repairJob.setLastHours(request.getLastHours());
 
         List<Part> parts = request.getRequiredParts().stream()
                 .map(this::createOrUpdatePart)
@@ -137,6 +138,7 @@ public class RepairJobService {
         repairJob.setIntervalInDays(request.getIntervalInDays());
         repairJob.setLastMileage(request.getLastMileage());
         repairJob.setLastJobDate(request.getLastJobDate());
+        repairJob.setLastHours(repairJob.getLastHours());
 
         List<Part> updatedParts = request.getRequiredParts().stream()
                 .map(this::createOrUpdatePart)
@@ -227,5 +229,9 @@ public class RepairJobService {
      */
     public List<RepairJob> findAll() {
         return repairJobRepository.findAll();
+    }
+
+    public Optional<RepairJob> findBySerialNumber(String serialNumber) {
+        return repairJobRepository.findBySerialNumber(serialNumber);
     }
 }

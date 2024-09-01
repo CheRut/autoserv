@@ -98,7 +98,7 @@ public class UsedFluidControllerTest {
         usedFluid.setBrand("Castrol");
         usedFluid.setVolume(4.0);
         usedFluid.setCardNumber("FLUID-001");
-        usedFluid.setMaintenanceRecord(maintenanceRecord);
+//        usedFluid.setMaintenanceRecord(maintenanceRecord);
     }
 
     @Test

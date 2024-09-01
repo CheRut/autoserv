@@ -99,12 +99,11 @@ public class CarParkController {
      * Инициализация контроллера. Загружает список автомобилей и связывает колонки таблицы с соответствующими полями.
      */
     public void initialize() {
-        editButton.setDisable(true);
+//        editButton.setDisable(true);
         carList = FXCollections.observableArrayList();
 
-        setupFieldListeners();
         loadCars();
-
+        setupFieldListeners();
         serialNumberColumn.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getSerialNumber()));
         enterpriseNumberColumn.setCellValueFactory(cellData ->
@@ -144,7 +143,8 @@ public class CarParkController {
         });
 
         // Деактивируем кнопку редактирования по умолчанию
-        setFieldsEditable(false);
+        editButton.setDisable(true);
+        setFieldsEditable(true);
     }
 
     /**
