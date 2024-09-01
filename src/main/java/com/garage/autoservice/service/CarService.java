@@ -59,4 +59,8 @@ public class CarService {
     public Optional<Car> findById(Long id) {
         return carRepository.findById(id);
     }
+
+    public Optional<Car> findByEnterpriseNumber(String enterpriseNumber) {
+        return carRepository.findByEnterpriseNumber(enterpriseNumber);
+    }
 }

@@ -5,17 +5,17 @@ import com.garage.autoservice.service.CarService;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 /**
  * Контроллер для управления окном автопарка.
@@ -87,6 +87,10 @@ public class CarParkController {
     @FXML
     private TextField carTypeField;
 
+    @FXML
+    private TextField searchField; // Новое поле для поиска
+    @FXML
+    private Button editButton;
     @Autowired
     private CarService carService;
     private ObservableList<Car> carList;
@@ -95,7 +99,10 @@ public class CarParkController {
      * Инициализация контроллера. Загружает список автомобилей и связывает колонки таблицы с соответствующими полями.
      */
     public void initialize() {
+        editButton.setDisable(true);
         carList = FXCollections.observableArrayList();
+
+        setupFieldListeners();
         loadCars();
 
         serialNumberColumn.setCellValueFactory(cellData ->
@@ -128,6 +135,16 @@ public class CarParkController {
                 new SimpleStringProperty(cellData.getValue().getCarType().toString()));
 
         carTable.setItems(carList);
+        // Добавляем слушатель для выделения автомобиля
+        carTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                populateFields(newValue);
+                setFieldsEditable(true);
+            }
+        });
+
+        // Деактивируем кнопку редактирования по умолчанию
+        setFieldsEditable(false);
     }
 
     /**
@@ -183,8 +200,9 @@ public class CarParkController {
     @FXML
     private void editCar() {
         Car selectedCar = carTable.getSelectionModel().getSelectedItem();
+        String entNumber = selectedCar.getEnterpriseNumber();
         if (selectedCar != null) {
-            logger.info("Редактирование автомобиля: {}", selectedCar);
+            logger.info("редактирование автомобиля с номером: {}: ", entNumber);
 
             selectedCar.setSerialNumber(serialNumberField.getText());
             selectedCar.setEnterpriseNumber(enterpriseNumberField.getText());
@@ -202,13 +220,65 @@ public class CarParkController {
             selectedCar.setCarType(Car.CarType.valueOf(carTypeField.getText().toUpperCase()));
 
             carService.save(selectedCar);
-            logger.info("Автомобиль обновлен: {}", selectedCar);
+            logger.info("Автомобиль  с номером {} обновлен: ", entNumber);
 
             loadCars();
         } else {
             showAlert("Ошибка", "Не выбран автомобиль для редактирования", Alert.AlertType.ERROR);
             logger.warn("Попытка редактирования без выбора автомобиля");
         }
+    }
+
+    @FXML
+    private void searchCar() {
+        String enterpriseNumber = searchField.getText();
+        Optional<Car> foundCar = carService.findByEnterpriseNumber(enterpriseNumber);
+
+        if (foundCar.isPresent()) {
+            carTable.getSelectionModel().select(foundCar.get());
+            populateFields(foundCar.get());
+            setFieldsEditable(true);
+        } else {
+            showAlert("Не найдено", "Автомобиль с таким enterpriseNumber не найден", Alert.AlertType.INFORMATION);
+            clearFields();
+            setFieldsEditable(false);
+        }
+    }
+
+    private void setFieldsEditable(boolean editable) {
+        serialNumberField.setEditable(editable);
+        enterpriseNumberField.setEditable(editable);
+        vinField.setEditable(editable);
+        licensePlateField.setEditable(editable);
+        makeField.setEditable(editable);
+        modelField.setEditable(editable);
+        engineTypeField.setEditable(editable);
+        engineNumberField.setEditable(editable);
+        transmissionTypeField.setEditable(editable);
+        transmissionNumberField.setEditable(editable);
+        yearOfManufactureField.setEditable(editable);
+        mileageField.setEditable(editable);
+        engineHoursField.setEditable(editable);
+        carTypeField.setEditable(editable);
+    }
+
+    private void populateFields(Car car) {
+        serialNumberField.setText(car.getSerialNumber());
+        enterpriseNumberField.setText(car.getEnterpriseNumber());
+        vinField.setText(car.getVin());
+        licensePlateField.setText(car.getLicensePlate());
+        makeField.setText(car.getMake());
+        modelField.setText(car.getModel());
+        engineTypeField.setText(car.getEngineType());
+        engineNumberField.setText(car.getEngineNumber());
+        transmissionTypeField.setText(car.getTransmissionType());
+        transmissionNumberField.setText(car.getTransmissionNumber());
+        yearOfManufactureField.setText(String.valueOf(car.getYearOfManufacture()));
+        mileageField.setText(String.valueOf(car.getMileage()));
+        engineHoursField.setText(String.valueOf(car.getEngineHours()));
+        carTypeField.setText(car.getCarType().toString());
+        // Заполняем поле поиска enterpriseNumber текущего автомобиля
+        searchField.setText(car.getEnterpriseNumber());
     }
 
     /**
@@ -262,11 +332,61 @@ public class CarParkController {
         mileageField.clear();
         engineHoursField.clear();
         carTypeField.clear();
+        searchField.clear(); // Очистка поля поиска
         logger.debug("Все поля ввода очищены");
     }
 
+    private void setupFieldListeners() {
+        ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
+            checkForChanges();
+        };
+
+        serialNumberField.textProperty().addListener(changeListener);
+        enterpriseNumberField.textProperty().addListener(changeListener);
+        vinField.textProperty().addListener(changeListener);
+        licensePlateField.textProperty().addListener(changeListener);
+        makeField.textProperty().addListener(changeListener);
+        modelField.textProperty().addListener(changeListener);
+        engineTypeField.textProperty().addListener(changeListener);
+        engineNumberField.textProperty().addListener(changeListener);
+        transmissionTypeField.textProperty().addListener(changeListener);
+        transmissionNumberField.textProperty().addListener(changeListener);
+        yearOfManufactureField.textProperty().addListener(changeListener);
+        mileageField.textProperty().addListener(changeListener);
+        engineHoursField.textProperty().addListener(changeListener);
+        carTypeField.textProperty().addListener(changeListener);
+    }
+
+
+    private void checkForChanges() {
+        Car selectedCar = carTable.getSelectionModel().getSelectedItem();
+        if (selectedCar != null) {
+            boolean hasChanges =
+                    !serialNumberField.getText().equals(selectedCar.getSerialNumber()) ||
+                            !enterpriseNumberField.getText().equals(selectedCar.getEnterpriseNumber()) ||
+                            !vinField.getText().equals(selectedCar.getVin()) ||
+                            !licensePlateField.getText().equals(selectedCar.getLicensePlate()) ||
+                            !makeField.getText().equals(selectedCar.getMake()) ||
+                            !modelField.getText().equals(selectedCar.getModel()) ||
+                            !engineTypeField.getText().equals(selectedCar.getEngineType()) ||
+                            !engineNumberField.getText().equals(selectedCar.getEngineNumber()) ||
+                            !transmissionTypeField.getText().equals(selectedCar.getTransmissionType()) ||
+                            !transmissionNumberField.getText().equals(selectedCar.getTransmissionNumber()) ||
+                            !yearOfManufactureField.getText().equals(String.valueOf(selectedCar.getYearOfManufacture())) ||
+                            !mileageField.getText().equals(String.valueOf(selectedCar.getMileage())) ||
+                            !engineHoursField.getText().equals(String.valueOf(selectedCar.getEngineHours())) ||
+                            !carTypeField.getText().equals(selectedCar.getCarType().toString());
+
+            editButton.setDisable(!hasChanges);
+        } else {
+            editButton.setDisable(true);
+        }
+    }
+
+
     /**
      * Проверяет, заполнены ли все обязательные поля.
+     *
      * @return true, если хотя бы одно поле пустое; false, если все поля заполнены.
      */
     private boolean fieldsAreEmpty() {
@@ -294,8 +414,9 @@ public class CarParkController {
 
     /**
      * Показать предупреждение.
-     * @param title заголовок окна предупреждения
-     * @param content содержимое предупреждения
+     *
+     * @param title     заголовок окна предупреждения
+     * @param content   содержимое предупреждения
      * @param alertType тип предупреждения
      */
     private void showAlert(String title, String content, Alert.AlertType alertType) {

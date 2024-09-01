@@ -20,4 +20,11 @@ public interface CarRepository extends JpaRepository<Car, Long> {
      * @return объект {@link Optional}, содержащий найденный автомобиль, если он существует
      */
     Optional<Car> findByVin(String vin);
+    /**
+     * Метод для поиска автомобиля по его номеру предприятия.
+     *
+     * @param enterpriseNumber номер предприятия для автомобиля
+     * @return объект {@link Optional}, содержащий найденный автомобиль, если он существует
+     */
+    Optional<Car> findByEnterpriseNumber(String enterpriseNumber);
 }

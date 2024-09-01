@@ -37,7 +37,8 @@
             </padding>
             <Button fx:id="addButton" text="Add" onAction="#addCar"/>
             <Button fx:id="deleteButton" text="Delete" onAction="#deleteCar"/>
-            <Button fx:id="editButton" text="Edit"/>
+            <Button fx:id="editButton" text="Edit" onAction="#editCar"/>
+            <Button text="Search" onAction="#searchCar"/>
         </HBox>
     </bottom>
     <top>
@@ -45,6 +46,7 @@
             <padding>
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
+            <TextField fx:id="searchField" promptText="Номер для поиска"/>
             <TextField fx:id="serialNumberField" promptText="Serial Number"/>
             <TextField fx:id="enterpriseNumberField" promptText="Enterprise Number"/>
             <TextField fx:id="vinField" promptText="VIN"/>
