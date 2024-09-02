@@ -128,7 +128,7 @@ public class MainApp extends Application {
      */
     private void openPlanningWindow() {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/planning_window.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/planned_jobs.fxml"));
             fxmlLoader.setControllerFactory(springContext::getBean);
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();

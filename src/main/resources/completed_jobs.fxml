@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -13,14 +14,15 @@
     <center>
         <TableView fx:id="repairJobTable">
             <columns>
-                <TableColumn fx:id="jobNameColumn" text="Job Name"/>
-                <TableColumn fx:id="intervalInMileageColumn" text="Interval in Mileage"/>
-                <TableColumn fx:id="intervalInHoursColumn" text="Interval in Hours"/>
-                <TableColumn fx:id="intervalInDaysColumn" text="Interval in Days"/>
-                <TableColumn fx:id="lastMileageColumn" text="Last Mileage"/>
-                <TableColumn fx:id="lastJobDateColumn" text="Last Job Date"/>
-                <TableColumn fx:id="lastHoursColumn" text="Last Hours"/>
-                <TableColumn fx:id="serialNumberColumn" text="Serial Number"/>
+                <TableColumn fx:id="jobNameColumn" text="Наименование работы"/>
+                <TableColumn fx:id="intervalInMileageColumn" text="Интервал по пробегу"/>
+                <TableColumn fx:id="intervalInHoursColumn" text="Интервал по часам"/>
+                <TableColumn fx:id="intervalInDaysColumn" text="Интервал по дням"/>
+                <TableColumn fx:id="lastMileageColumn" text="Последний пробег"/>
+                <TableColumn fx:id="lastJobDateColumn" text="Дата последней работы"/>
+                <TableColumn fx:id="lastHoursColumn" text="Последние часы"/>
+                <TableColumn fx:id="serialNumberColumn" text="Серийный номер"/>
+                <TableColumn fx:id="orderNumberColumn" text="Номер заказа"/>
             </columns>
         </TableView>
     </center>
@@ -29,7 +31,11 @@
             <padding>
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
-            <TextField fx:id="searchField" promptText="Search by Serial Number"/>
+            <HBox spacing="10">
+                <CheckBox fx:id="searchBySerialNumber" text="Искать по серийному номеру" selected="true"/>
+                <CheckBox fx:id="searchByOrderNumber" text="Искать по номеру заказа"/>
+            </HBox>
+            <TextField fx:id="searchField" promptText="Введите значение для поиска"/>
             <Button text="Search" onAction="#searchRepairJob"/>
         </VBox>
     </top>
@@ -38,9 +44,9 @@
             <padding>
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
-            <Button fx:id="addButton" text="Add" onAction="#addRepairJob"/>
-            <Button fx:id="deleteButton" text="Delete" onAction="#deleteJob"/>
-            <Button fx:id="editButton" text="Edit" onAction="#editRepairJob" disable="true"/>
+            <Button fx:id="addButton" text="Добавить" onAction="#addRepairJob"/>
+            <Button fx:id="deleteButton" text="Удалить" onAction="#deleteJob"/>
+            <Button fx:id="editButton" text="Редактировать" onAction="#editRepairJob" disable="true"/>
         </HBox>
     </bottom>
     <right>
@@ -48,14 +54,15 @@
             <padding>
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
-            <TextField fx:id="jobNameField" promptText="Job Name"/>
-            <TextField fx:id="intervalInMileageField" promptText="Interval in Mileage"/>
-            <TextField fx:id="intervalInHoursField" promptText="Interval in Hours"/>
-            <TextField fx:id="intervalInDaysField" promptText="Interval in Days"/>
-            <TextField fx:id="lastMileageField" promptText="Last Mileage"/>
-            <TextField fx:id="lastJobDateField" promptText="Last Job Date (yyyy-MM-dd)"/>
-            <TextField fx:id="lastHoursField" promptText="Last Hours"/>
-            <TextField fx:id="serialNumberField" promptText="Serial Number"/>
+            <TextField fx:id="jobNameField" promptText="Наименование работы"/>
+            <TextField fx:id="intervalInMileageField" promptText="Интервал по пробегу"/>
+            <TextField fx:id="intervalInHoursField" promptText="Интервал по часам"/>
+            <TextField fx:id="intervalInDaysField" promptText="Интервал по дням"/>
+            <TextField fx:id="lastMileageField" promptText="Последний пробег"/>
+            <TextField fx:id="lastJobDateField" promptText="Дата последней работы (yyyy-MM-dd)"/>
+            <TextField fx:id="lastHoursField" promptText="Последние часы"/>
+            <TextField fx:id="serialNumberField" promptText="Серийный номер"/>
+            <TextField fx:id="orderNumberField" promptText="Номер заказа"/>
         </VBox>
     </right>
 </BorderPane>

@@ -44,6 +44,19 @@ public class RepairJob {
     @NotBlank(message = "Серийный номер не может быть пустым")
     private String serialNumber;
 
+    // Новое поле для номера заказа
+    private String orderNumber="Работа проводилась на территории автопарка";
+
+    private String cardNumber = "отсутствует на складе";
+
+    private String fluidType = "отсутствует на складе";
+
+    private long remainingMileage;
+
+    private String remainingTime;
+
+    private String notes;
+
     @ManyToMany
     @JoinTable(
             name = "repairjob_parts",
@@ -148,5 +161,52 @@ public class RepairJob {
     public void setSerialNumber(String serialNumber) {
         logger.debug("Установка серийного номера: {}", serialNumber);
         this.serialNumber = serialNumber;
+    }
+    public String getOrderNumber() {
+        return orderNumber;
+    }
+
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    public String getFluidType() {
+        return fluidType;
+    }
+
+    public void setFluidType(String fluidType) {
+        this.fluidType = fluidType;
+    }
+
+    public long getRemainingMileage() {
+        return remainingMileage;
+    }
+
+    public void setRemainingMileage(long remainingMileage) {
+        this.remainingMileage = remainingMileage;
+    }
+
+    public String getRemainingTime() {
+        return remainingTime;
+    }
+
+    public void setRemainingTime(String remainingTime) {
+        this.remainingTime = remainingTime;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }

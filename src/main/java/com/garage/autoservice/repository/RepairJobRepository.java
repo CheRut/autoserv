@@ -26,4 +26,6 @@ public interface RepairJobRepository extends JpaRepository<RepairJob, Long> {
     List<RepairJob> findAllBySerialNumberAndLastJobDateBetween(String serialNumber, LocalDate startDate, LocalDate endDate);
 
     Optional<RepairJob> findBySerialNumber(String serialNumber);
+
+    Optional<RepairJob> findByOrderNumber(String orderNumber);
 }

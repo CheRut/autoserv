@@ -3,7 +3,6 @@ package com.garage.autoservice.ui;
 import com.garage.autoservice.entity.RepairJob;
 import com.garage.autoservice.service.RepairJobService;
 import javafx.beans.property.SimpleLongProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -47,6 +46,8 @@ public class RepairJobControllerJFX {
     private TableColumn<RepairJob, Long> lastHoursColumn;
     @FXML
     private TableColumn<RepairJob, String> serialNumberColumn;
+    @FXML
+    private TableColumn<RepairJob, String> orderNumberColumn;
 
     @FXML
     private TextField jobNameField;
@@ -64,9 +65,18 @@ public class RepairJobControllerJFX {
     private TextField lastHoursField;
     @FXML
     private TextField serialNumberField;
+    @FXML
+    private TextField orderNumberField;
 
     @FXML
     private TextField searchField;
+
+    @FXML
+    private CheckBox searchBySerialNumber;
+
+    @FXML
+    private CheckBox searchByOrderNumber;
+
     @FXML
     private Button editButton;
 
@@ -83,8 +93,11 @@ public class RepairJobControllerJFX {
         repairJobList = FXCollections.observableArrayList();
 
         setupFieldListeners();
+        setupCheckBoxListeners();  // Добавлен метод для настройки поведения чекбоксов
         loadRepairJobs();
+
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
         jobNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getJobName()));
         intervalInMileageColumn.setCellValueFactory(cellData -> new SimpleLongProperty(cellData.getValue().getIntervalInMileage()).asObject());
         intervalInHoursColumn.setCellValueFactory(cellData -> new SimpleLongProperty(cellData.getValue().getIntervalInHours()).asObject());
@@ -92,10 +105,11 @@ public class RepairJobControllerJFX {
         lastMileageColumn.setCellValueFactory(cellData -> new SimpleLongProperty(cellData.getValue().getLastMileage()).asObject());
         lastJobDateColumn.setCellValueFactory(cellData -> {
             LocalDate date = cellData.getValue().getLastJobDate();
-            return new SimpleStringProperty(date != null ? date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : "");
+            return new SimpleStringProperty(date != null ? date.format(dateFormatter) : "");
         });
         lastHoursColumn.setCellValueFactory(cellData -> new SimpleLongProperty(cellData.getValue().getLastHours()).asObject());
         serialNumberColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getSerialNumber()));
+        orderNumberColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getOrderNumber()));
 
         repairJobTable.setItems(repairJobList);
         repairJobTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -109,16 +123,38 @@ public class RepairJobControllerJFX {
     }
 
     /**
-     * Загрузка списка выполненных работ из базы данных.
+     * Настраивает поведение чекбоксов для поиска.
      */
-    @FXML
-    private void loadRepairJobs() {
-        repairJobList.setAll(repairJobService.findAll());
-        logger.info("Загружено {} записей о выполненных работах из базы данных", repairJobList.size());
+    private void setupCheckBoxListeners() {
+        searchBySerialNumber.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                searchByOrderNumber.setSelected(false);
+            }
+        });
+
+        searchByOrderNumber.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                searchBySerialNumber.setSelected(false);
+            }
+        });
     }
 
     /**
-     * Добавление новой ремонтной работы в базу данных и обновление таблицы.
+     * Загружает список выполненных работ из базы данных.
+     */
+    @FXML
+    private void loadRepairJobs() {
+        try {
+            repairJobList.setAll(repairJobService.findAll());
+            logger.info("Загружено {} записей о выполненных работах из базы данных", repairJobList.size());
+        } catch (Exception e) {
+            logger.error("Ошибка при загрузке выполненных работ", e);
+            showAlert("Ошибка", "Не удалось загрузить список выполненных работ: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+
+    /**
+     * Добавляет новую ремонтную работу в базу данных и обновляет таблицу.
      */
     @FXML
     private void addRepairJob() {
@@ -134,9 +170,10 @@ public class RepairJobControllerJFX {
             repairJob.setIntervalInHours(Long.parseLong(intervalInHoursField.getText()));
             repairJob.setIntervalInDays(Long.parseLong(intervalInDaysField.getText()));
             repairJob.setLastMileage(Long.parseLong(lastMileageField.getText()));
-            repairJob.setLastJobDate(LocalDate.parse(lastJobDateField.getText()));
+            repairJob.setLastJobDate(LocalDate.parse(lastJobDateField.getText(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             repairJob.setLastHours(Long.parseLong(lastHoursField.getText()));
             repairJob.setSerialNumber(serialNumberField.getText());
+            repairJob.setOrderNumber(orderNumberField.getText());
 
             repairJobService.save(repairJob);
             logger.info("Ремонтная работа добавлена: {}", repairJob);
@@ -151,7 +188,7 @@ public class RepairJobControllerJFX {
     }
 
     /**
-     * Удаление выбранной работы из базы данных и обновление таблицы.
+     * Удаляет выбранную работу из базы данных и обновляет таблицу.
      */
     @FXML
     private void deleteJob() {
@@ -160,8 +197,8 @@ public class RepairJobControllerJFX {
             try {
                 repairJobService.delete(selectedJob);
                 logger.info("Работа удалена: {}", selectedJob);
-                loadRepairJobs();  // Перезагрузка списка работ
-                clearFields();     // Очистка полей после удаления
+                loadRepairJobs();
+                clearFields();
                 showAlert("Информация", "Работа успешно удалена", Alert.AlertType.INFORMATION);
             } catch (Exception e) {
                 logger.error("Ошибка при удалении работы", e);
@@ -173,7 +210,7 @@ public class RepairJobControllerJFX {
     }
 
     /**
-     * Редактирование выбранной записи о выполненной работе.
+     * Редактирует выбранную запись о выполненной работе.
      */
     @FXML
     private void editRepairJob() {
@@ -188,6 +225,7 @@ public class RepairJobControllerJFX {
                 selectedJob.setLastJobDate(LocalDate.parse(lastJobDateField.getText(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
                 selectedJob.setLastHours(Long.parseLong(lastHoursField.getText()));
                 selectedJob.setSerialNumber(serialNumberField.getText());
+                selectedJob.setOrderNumber(orderNumberField.getText());
 
                 repairJobService.save(selectedJob);
                 loadRepairJobs();
@@ -204,21 +242,32 @@ public class RepairJobControllerJFX {
     }
 
     /**
-     * Поиск записи о выполненной работе по серийному номеру.
+     * Поиск записи о выполненной работе по серийному номеру или номеру заказа в зависимости от выбранного критерия.
      */
     @FXML
     private void searchRepairJob() {
-        String serialNumber = searchField.getText();
-        Optional<RepairJob> foundJob = repairJobService.findBySerialNumber(serialNumber);
+        String searchText = searchField.getText();
+        try {
+            Optional<RepairJob> foundJob;
 
-        if (foundJob.isPresent()) {
-            repairJobTable.getSelectionModel().select(foundJob.get());
-            populateFields(foundJob.get());
-            setFieldsEditable(true);
-        } else {
-            showAlert("Не найдено", "Запись с таким серийным номером не найдена", Alert.AlertType.INFORMATION);
-            clearFields();
-            setFieldsEditable(false);
+            if (searchBySerialNumber.isSelected()) {
+                foundJob = repairJobService.findBySerialNumber(searchText);
+            } else {
+                foundJob = repairJobService.findByOrderNumber(searchText);
+            }
+
+            if (foundJob.isPresent()) {
+                repairJobTable.getSelectionModel().select(foundJob.get());
+                populateFields(foundJob.get());
+                setFieldsEditable(true);
+            } else {
+                showAlert("Не найдено", "Запись с таким серийным номером или номером заказа не найдена", Alert.AlertType.INFORMATION);
+                clearFields();
+                setFieldsEditable(false);
+            }
+        } catch (Exception e) {
+            logger.error("Ошибка при поиске работы", e);
+            showAlert("Ошибка", "Не удалось выполнить поиск: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -234,6 +283,7 @@ public class RepairJobControllerJFX {
         lastJobDateField.setEditable(editable);
         lastHoursField.setEditable(editable);
         serialNumberField.setEditable(editable);
+        orderNumberField.setEditable(editable);
     }
 
     /**
@@ -248,7 +298,7 @@ public class RepairJobControllerJFX {
         lastJobDateField.setText(job.getLastJobDate().toString());
         lastHoursField.setText(String.valueOf(job.getLastHours()));
         serialNumberField.setText(job.getSerialNumber());
-
+        orderNumberField.setText(job.getOrderNumber());
         searchField.setText(job.getSerialNumber());
     }
 
@@ -266,8 +316,12 @@ public class RepairJobControllerJFX {
         lastJobDateField.textProperty().addListener(changeListener);
         lastHoursField.textProperty().addListener(changeListener);
         serialNumberField.textProperty().addListener(changeListener);
+        orderNumberField.textProperty().addListener(changeListener);
     }
 
+    /**
+     * Проверяет наличие изменений в полях и активирует кнопку редактирования.
+     */
     private void checkForChanges() {
         RepairJob selectedJob = repairJobTable.getSelectionModel().getSelectedItem();
         if (selectedJob != null) {
@@ -279,7 +333,8 @@ public class RepairJobControllerJFX {
                             !lastMileageField.getText().equals(String.valueOf(selectedJob.getLastMileage())) ||
                             !lastJobDateField.getText().equals(selectedJob.getLastJobDate().toString()) ||
                             !lastHoursField.getText().equals(String.valueOf(selectedJob.getLastHours())) ||
-                            !serialNumberField.getText().equals(selectedJob.getSerialNumber());
+                            !serialNumberField.getText().equals(selectedJob.getSerialNumber()) ||
+                            !orderNumberField.getText().equals(selectedJob.getOrderNumber());
 
             editButton.setDisable(!hasChanges);
         } else {
@@ -300,8 +355,10 @@ public class RepairJobControllerJFX {
         lastHoursField.clear();
         serialNumberField.clear();
         searchField.clear();
+        orderNumberField.clear();
         logger.debug("Все поля ввода очищены");
     }
+
     /**
      * Проверяет, заполнены ли все обязательные поля.
      *
@@ -315,8 +372,10 @@ public class RepairJobControllerJFX {
                 lastMileageField.getText().isEmpty() ||
                 lastJobDateField.getText().isEmpty() ||
                 lastHoursField.getText().isEmpty() ||
-                serialNumberField.getText().isEmpty();
+                serialNumberField.getText().isEmpty() ||
+                orderNumberField.getText().isEmpty();
     }
+
     /**
      * Показать предупреждение.
      */

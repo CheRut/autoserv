@@ -234,4 +234,8 @@ public class RepairJobService {
     public Optional<RepairJob> findBySerialNumber(String serialNumber) {
         return repairJobRepository.findBySerialNumber(serialNumber);
     }
+
+    public Optional<RepairJob> findByOrderNumber(String orderNumber) {
+        return repairJobRepository.findByOrderNumber(orderNumber);
+    }
 }
