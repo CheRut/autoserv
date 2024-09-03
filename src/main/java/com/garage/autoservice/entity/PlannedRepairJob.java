@@ -20,7 +20,13 @@ public class PlannedRepairJob {
     private LocalDate remainingTime;
     private String orderNumber;
     private String notes;
+
+    private int partQuantity;
+
+    private float fluidVolume;
     private boolean inPark;
+
+    private String jobType;
 
     // Getters and setters
     public Long getId() {
@@ -167,5 +173,29 @@ public class PlannedRepairJob {
                 ", notes='" + notes + '\'' +
                 ", inPark=" + inPark +
                 '}';
+    }
+
+    public String getJobType() {
+        return jobType;
+    }
+
+    public void setJobType(String jobType) {
+        this.jobType=jobType;
+    }
+
+    public int getPartQuantity() {
+        return partQuantity;
+    }
+
+    public void setPartQuantity(int partQuantity) {
+        this.partQuantity = partQuantity;
+    }
+
+    public float getFluidVolume() {
+        return fluidVolume;
+    }
+
+    public void setFluidVolume(float fluidQuantity) {
+        this.fluidVolume = fluidQuantity;
     }
 }

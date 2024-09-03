@@ -90,7 +90,7 @@ public class PartService {
         return true;
     }
 
-    public Optional<Part> findByCardNumber(int cardNumber) {
+    public Optional<Part> findByCardNumber(String cardNumber) {
         return partRepository.findByCardNumber(cardNumber);
     }
 }

@@ -41,7 +41,7 @@ public class PartControllerJFX {
     private TableColumn<Part, Integer> quantityColumn;
 
     @FXML
-    private TableColumn<Part, Integer> cardNumberColumn;
+    private TableColumn<Part, String> cardNumberColumn;
 
     @FXML
     private TableColumn<Part, String> vinColumn;
@@ -97,7 +97,7 @@ public class PartControllerJFX {
         quantityColumn.setCellValueFactory(cellData ->
                 new SimpleIntegerProperty(cellData.getValue().getQuantity()).asObject());
         cardNumberColumn.setCellValueFactory(cellData ->
-                new SimpleIntegerProperty(cellData.getValue().getCardNumber()).asObject());
+                new SimpleStringProperty(cellData.getValue().getCardNumber()));
         vinColumn.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getVin()));
 
@@ -141,7 +141,7 @@ public class PartControllerJFX {
             part.setManufacturer(manufacturerField.getText());
             part.setPartNumber(partNumberField.getText());
             part.setQuantity(Integer.parseInt(quantityField.getText()));
-            part.setCardNumber(Integer.parseInt(cardNumberField.getText()));
+            part.setCardNumber(cardNumberField.getText());
             part.setVin(vinField.getText());
 
             partService.save(part);
@@ -187,7 +187,7 @@ public class PartControllerJFX {
                 selectedPart.setManufacturer(manufacturerField.getText());
                 selectedPart.setPartNumber(partNumberField.getText());
                 selectedPart.setQuantity(Integer.parseInt(quantityField.getText()));
-                selectedPart.setCardNumber(Integer.parseInt(cardNumberField.getText()));
+                selectedPart.setCardNumber(cardNumberField.getText());
                 selectedPart.setVin(vinField.getText());
 
                 partService.save(selectedPart);
@@ -216,7 +216,7 @@ public class PartControllerJFX {
     @FXML
     private void searchPart() {
         try {
-            int cardNumber = Integer.parseInt(searchField.getText());
+            String cardNumber = (searchField.getText());
             Optional<Part> foundPart = partService.findByCardNumber(cardNumber);
 
             if (foundPart.isPresent()) {

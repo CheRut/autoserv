@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
@@ -16,13 +17,16 @@
         <TableView fx:id="plannedRepairJobTable">
             <columns>
                 <TableColumn fx:id="jobNameColumn" text="Job Name"/>
-                <TableColumn fx:id="cardNumberColumn" text="Card Number (Part)"/>
-                <TableColumn fx:id="fluidTypeColumn" text="Card Number (Fluid)"/>
+                <TableColumn fx:id="partNameColumn" text="Card Number (Part)"/>
+                <TableColumn fx:id="partQuantityColumn" text="Количество (Part)"/>
+                <TableColumn fx:id="fluidNameColumn" text="Card Number (Fluid)"/>
+                <TableColumn fx:id="fluidVolumeColumn" text="Объем (Fluid)"/>
                 <TableColumn fx:id="serialNumberColumn" text="Serial Number"/>
                 <TableColumn fx:id="remainingMileageColumn" text="Remaining Mileage"/>
                 <TableColumn fx:id="remainingTimeColumn" text="Remaining Time"/>
                 <TableColumn fx:id="orderNumberColumn" text="Order Number"/>
                 <TableColumn fx:id="notesColumn" text="Notes"/>
+                <TableColumn fx:id="jobTypeColumn" text="Тип работы"/> <!-- Добавлена колонка для типа работы -->
             </columns>
         </TableView>
     </center>
@@ -32,13 +36,16 @@
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
             <TextField fx:id="jobNameField" promptText="Job Name"/>
-            <TextField fx:id="cardNumberField" promptText="Card Number (Part)"/>
-            <TextField fx:id="fluidTypeField" promptText="Card Number (Fluid)"/>
+            <TextField fx:id="partNameField" promptText="Card Number (Part)"/>
+            <TextField fx:id="partQuantityField" promptText="Количество (Part)"/>
+            <TextField fx:id="fluidNameField" promptText="Card Number (Fluid)"/>
+            <TextField fx:id="fluidVolumeField" promptText="Объем/Вес (Fluid)"/>
             <TextField fx:id="serialNumberField" promptText="Serial Number"/>
             <TextField fx:id="remainingMileageField" promptText="Remaining Mileage"/>
             <TextField fx:id="remainingTimeField" promptText="Remaining Time"/>
             <TextField fx:id="orderNumberField" promptText="Order Number"/>
             <TextArea fx:id="notesField" promptText="Notes"/>
+            <ComboBox fx:id="jobTypeComboBox" promptText="Job Type"/> <!-- Добавлен ComboBox для типа работы -->
             <CheckBox fx:id="inParkCheckBox" text="Work done in park"/>
         </VBox>
     </right>

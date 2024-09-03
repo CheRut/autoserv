@@ -80,6 +80,9 @@ public class RepairJobRequest {
     @NotEmpty(message = "Серийный номер не может быть пустым")
     private String serialNumber;
 
+    @NotEmpty(message = "Тип работ не может быть пустым")
+    private String jobsType;
+
 
 
 }

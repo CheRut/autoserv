@@ -47,6 +47,8 @@ public class RepairJobControllerJFX {
     @FXML
     private TableColumn<RepairJob, String> serialNumberColumn;
     @FXML
+    private TableColumn<RepairJob, String> jobsTypeColumn;
+    @FXML
     private TableColumn<RepairJob, String> orderNumberColumn;
 
     @FXML
@@ -69,6 +71,9 @@ public class RepairJobControllerJFX {
     private TextField orderNumberField;
 
     @FXML
+    private ComboBox<String> jobsTypeComboBox;
+
+    @FXML
     private TextField searchField;
 
     @FXML
@@ -76,6 +81,9 @@ public class RepairJobControllerJFX {
 
     @FXML
     private CheckBox searchByOrderNumber;
+
+    @FXML
+    private CheckBox searchByJobsType; // Новый чекбокс для поиска по типу работ
 
     @FXML
     private Button editButton;
@@ -110,6 +118,7 @@ public class RepairJobControllerJFX {
         lastHoursColumn.setCellValueFactory(cellData -> new SimpleLongProperty(cellData.getValue().getLastHours()).asObject());
         serialNumberColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getSerialNumber()));
         orderNumberColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getOrderNumber()));
+        jobsTypeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getJobsType()));
 
         repairJobTable.setItems(repairJobList);
         repairJobTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -120,6 +129,14 @@ public class RepairJobControllerJFX {
         });
 
         setFieldsEditable(true);
+        setupJobsTypeComboBox();  // Настраиваем выпадающий список
+    }
+
+    /**
+     * Настройка выпадающего списка для типа работ.
+     */
+    private void setupJobsTypeComboBox() {
+        jobsTypeComboBox.setItems(FXCollections.observableArrayList("ТО1", "ТО2", "ТР", "ДО1", "ДО2", "УТО", "СО"));
     }
 
     /**
@@ -129,12 +146,21 @@ public class RepairJobControllerJFX {
         searchBySerialNumber.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 searchByOrderNumber.setSelected(false);
+                searchByJobsType.setSelected(false); // Отключить другие чекбоксы при выборе этого
             }
         });
 
         searchByOrderNumber.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 searchBySerialNumber.setSelected(false);
+                searchByJobsType.setSelected(false); // Отключить другие чекбоксы при выборе этого
+            }
+        });
+
+        searchByJobsType.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                searchBySerialNumber.setSelected(false);
+                searchByOrderNumber.setSelected(false); // Отключить другие чекбоксы при выборе этого
             }
         });
     }
@@ -174,6 +200,7 @@ public class RepairJobControllerJFX {
             repairJob.setLastHours(Long.parseLong(lastHoursField.getText()));
             repairJob.setSerialNumber(serialNumberField.getText());
             repairJob.setOrderNumber(orderNumberField.getText());
+            repairJob.setJobsType(jobsTypeComboBox.getValue());
 
             repairJobService.save(repairJob);
             logger.info("Ремонтная работа добавлена: {}", repairJob);
@@ -226,6 +253,7 @@ public class RepairJobControllerJFX {
                 selectedJob.setLastHours(Long.parseLong(lastHoursField.getText()));
                 selectedJob.setSerialNumber(serialNumberField.getText());
                 selectedJob.setOrderNumber(orderNumberField.getText());
+                selectedJob.setJobsType(jobsTypeComboBox.getValue());
 
                 repairJobService.save(selectedJob);
                 loadRepairJobs();
@@ -242,7 +270,7 @@ public class RepairJobControllerJFX {
     }
 
     /**
-     * Поиск записи о выполненной работе по серийному номеру или номеру заказа в зависимости от выбранного критерия.
+     * Поиск записи о выполненной работе по серийному номеру, номеру заказа или типу работ в зависимости от выбранного критерия.
      */
     @FXML
     private void searchRepairJob() {
@@ -252,8 +280,13 @@ public class RepairJobControllerJFX {
 
             if (searchBySerialNumber.isSelected()) {
                 foundJob = repairJobService.findBySerialNumber(searchText);
-            } else {
+            } else if (searchByOrderNumber.isSelected()) {
                 foundJob = repairJobService.findByOrderNumber(searchText);
+            } else if (searchByJobsType.isSelected()) {
+                foundJob = repairJobService.findByJobsType(searchText);
+            } else {
+                showAlert("Ошибка", "Выберите критерий поиска", Alert.AlertType.ERROR);
+                return;
             }
 
             if (foundJob.isPresent()) {
@@ -261,7 +294,7 @@ public class RepairJobControllerJFX {
                 populateFields(foundJob.get());
                 setFieldsEditable(true);
             } else {
-                showAlert("Не найдено", "Запись с таким серийным номером или номером заказа не найдена", Alert.AlertType.INFORMATION);
+                showAlert("Не найдено", "Запись с такими данными не найдена", Alert.AlertType.INFORMATION);
                 clearFields();
                 setFieldsEditable(false);
             }
@@ -284,6 +317,7 @@ public class RepairJobControllerJFX {
         lastHoursField.setEditable(editable);
         serialNumberField.setEditable(editable);
         orderNumberField.setEditable(editable);
+        jobsTypeComboBox.setDisable(!editable);
     }
 
     /**
@@ -299,6 +333,7 @@ public class RepairJobControllerJFX {
         lastHoursField.setText(String.valueOf(job.getLastHours()));
         serialNumberField.setText(job.getSerialNumber());
         orderNumberField.setText(job.getOrderNumber());
+        jobsTypeComboBox.setValue(job.getJobsType());
         searchField.setText(job.getSerialNumber());
     }
 
@@ -317,6 +352,7 @@ public class RepairJobControllerJFX {
         lastHoursField.textProperty().addListener(changeListener);
         serialNumberField.textProperty().addListener(changeListener);
         orderNumberField.textProperty().addListener(changeListener);
+        jobsTypeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> checkForChanges());
     }
 
     /**
@@ -334,7 +370,8 @@ public class RepairJobControllerJFX {
                             !lastJobDateField.getText().equals(selectedJob.getLastJobDate().toString()) ||
                             !lastHoursField.getText().equals(String.valueOf(selectedJob.getLastHours())) ||
                             !serialNumberField.getText().equals(selectedJob.getSerialNumber()) ||
-                            !orderNumberField.getText().equals(selectedJob.getOrderNumber());
+                            !orderNumberField.getText().equals(selectedJob.getOrderNumber()) ||
+                            !jobsTypeComboBox.getValue().equals(selectedJob.getJobsType());
 
             editButton.setDisable(!hasChanges);
         } else {
@@ -356,6 +393,7 @@ public class RepairJobControllerJFX {
         serialNumberField.clear();
         searchField.clear();
         orderNumberField.clear();
+        jobsTypeComboBox.getSelectionModel().clearSelection();
         logger.debug("Все поля ввода очищены");
     }
 
@@ -373,7 +411,8 @@ public class RepairJobControllerJFX {
                 lastJobDateField.getText().isEmpty() ||
                 lastHoursField.getText().isEmpty() ||
                 serialNumberField.getText().isEmpty() ||
-                orderNumberField.getText().isEmpty();
+                orderNumberField.getText().isEmpty() ||
+                jobsTypeComboBox.getValue() == null;
     }
 
     /**

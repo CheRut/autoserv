@@ -40,6 +40,7 @@ public class Fluid {
     @Min(value = 0, message = "Количество жидкости не может быть отрицательным")
     private int quantity;
 
+
     /**
      * Идентификационный номер жидкости на складе.
      */

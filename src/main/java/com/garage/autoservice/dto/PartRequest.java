@@ -46,7 +46,7 @@ public class PartRequest {
      * Этот параметр должен быть положительным числом.
      */
     @Positive(message = "Код карточки должен быть положительным числом")
-    private int cardNumber;
+    private String cardNumber;
 
     /**
      * VIN-код автомобиля, к которому подходит запчасть (может быть null).

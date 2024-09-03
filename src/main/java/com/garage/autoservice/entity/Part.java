@@ -60,8 +60,9 @@ public class Part {
     /**
      * Карточка-идентификатор запчасти на складе.
      */
-    @Min(value = 0, message = "Карточка-идентификатор не может быть отрицательной")
-    private int cardNumber;
+    @NotBlank(message = "cardNumber не может быть пустым")
+    @Size(max = 50, message = "Номер запчасти не может превышать 50 символов")
+    private String cardNumber;
 
     /**
      * VIN-код автомобиля, к которому подходит запчасть.

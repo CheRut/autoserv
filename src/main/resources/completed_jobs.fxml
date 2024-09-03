@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -23,6 +24,7 @@
                 <TableColumn fx:id="lastHoursColumn" text="Последние часы"/>
                 <TableColumn fx:id="serialNumberColumn" text="Серийный номер"/>
                 <TableColumn fx:id="orderNumberColumn" text="Номер заказа"/>
+                <TableColumn fx:id="jobsTypeColumn" text="Тип работы"/> <!-- Добавлена колонка для типа работы -->
             </columns>
         </TableView>
     </center>
@@ -34,6 +36,7 @@
             <HBox spacing="10">
                 <CheckBox fx:id="searchBySerialNumber" text="Искать по серийному номеру" selected="true"/>
                 <CheckBox fx:id="searchByOrderNumber" text="Искать по номеру заказа"/>
+                <CheckBox fx:id="searchByJobsType" text="Искать по типу работы"/> <!-- Добавлен чекбокс для поиска по типу работы -->
             </HBox>
             <TextField fx:id="searchField" promptText="Введите значение для поиска"/>
             <Button text="Search" onAction="#searchRepairJob"/>
@@ -63,6 +66,7 @@
             <TextField fx:id="lastHoursField" promptText="Последние часы"/>
             <TextField fx:id="serialNumberField" promptText="Серийный номер"/>
             <TextField fx:id="orderNumberField" promptText="Номер заказа"/>
+            <ComboBox fx:id="jobsTypeComboBox" promptText="Тип работы"/> <!-- Добавлен ComboBox для типа работы -->
         </VBox>
     </right>
 </BorderPane>

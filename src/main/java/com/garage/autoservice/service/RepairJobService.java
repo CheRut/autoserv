@@ -238,4 +238,8 @@ public class RepairJobService {
     public Optional<RepairJob> findByOrderNumber(String orderNumber) {
         return repairJobRepository.findByOrderNumber(orderNumber);
     }
+
+    public Optional<RepairJob> findByJobsType(String searchText) {
+        return repairJobRepository.findByJobsType(searchText);
+    }
 }

@@ -57,6 +57,9 @@ public class RepairJob {
 
     private String notes;
 
+    @NotBlank(message = "тип работ не может быть пусты")
+    private String jobsType;
+
     @ManyToMany
     @JoinTable(
             name = "repairjob_parts",
@@ -208,5 +211,13 @@ public class RepairJob {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getJobsType() {
+        return jobsType;
+    }
+
+    public void setJobsType(String jobsType) {
+        this.jobsType = jobsType;
     }
 }
