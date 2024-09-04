@@ -63,4 +63,16 @@ public class CarService {
     public Optional<Car> findByEnterpriseNumber(String enterpriseNumber) {
         return carRepository.findByEnterpriseNumber(enterpriseNumber);
     }
+
+    public Optional<Car> findBySerialNumber(String serialNumber) {
+        return carRepository.findByEnterpriseNumber(serialNumber);
+    }
+
+    /**
+     * Метод для получения всех автомобилей из базы данных.
+     * @return список всех автомобилей
+     */
+    public List<Car> findAllCars() {
+        return carRepository.findAll();
+    }
 }

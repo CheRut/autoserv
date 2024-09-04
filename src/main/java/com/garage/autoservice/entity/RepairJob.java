@@ -220,4 +220,7 @@ public class RepairJob {
     public void setJobsType(String jobsType) {
         this.jobsType = jobsType;
     }
+
+
+
 }

@@ -14,19 +14,21 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.garage.autoservice.ui.PlannedRepairJobControllerJFX">
     <center>
-        <TableView fx:id="plannedRepairJobTable">
+        <TableView fx:id="plannedRepairJobTable" editable="true"> <!-- Включаем редактирование таблицы -->
             <columns>
                 <TableColumn fx:id="jobNameColumn" text="Job Name"/>
-                <TableColumn fx:id="partNameColumn" text="Card Number (Part)"/>
-                <TableColumn fx:id="partQuantityColumn" text="Количество (Part)"/>
-                <TableColumn fx:id="fluidNameColumn" text="Card Number (Fluid)"/>
-                <TableColumn fx:id="fluidVolumeColumn" text="Объем (Fluid)"/>
+                <TableColumn fx:id="partCardNumberColumn" text="Card Number (Part)" editable="true"/> <!-- Добавлено редактирование -->
+                <TableColumn fx:id="partNameColumn" text="Наименование (Part)"/>
+                <TableColumn fx:id="partQuantityColumn" text="Количество (Part)" editable="true"/> <!-- Добавлено редактирование -->
+                <TableColumn fx:id="fluidCardNumberColumn" text="Card Number (Fluid)" editable="true"/> <!-- Добавлено редактирование -->
+                <TableColumn fx:id="fluidNameColumn" text="Наименование (Fluid)"/>
+                <TableColumn fx:id="fluidVolumeColumn" text="Объем (Fluid)" editable="true"/> <!-- Добавлено редактирование -->
                 <TableColumn fx:id="serialNumberColumn" text="Serial Number"/>
                 <TableColumn fx:id="remainingMileageColumn" text="Remaining Mileage"/>
                 <TableColumn fx:id="remainingTimeColumn" text="Remaining Time"/>
-                <TableColumn fx:id="orderNumberColumn" text="Order Number"/>
+                <TableColumn fx:id="orderNumberColumn" text="Order Number" editable="true"/> <!-- Добавлено редактирование -->
                 <TableColumn fx:id="notesColumn" text="Notes"/>
-                <TableColumn fx:id="jobTypeColumn" text="Тип работы"/> <!-- Добавлена колонка для типа работы -->
+                <TableColumn fx:id="jobTypeColumn" text="Тип работы" editable="true"/> <!-- Колонка для типа работы с возможностью редактирования -->
             </columns>
         </TableView>
     </center>
@@ -36,16 +38,16 @@
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
             <TextField fx:id="jobNameField" promptText="Job Name"/>
-            <TextField fx:id="partNameField" promptText="Card Number (Part)"/>
+            <TextField fx:id="partCardNumberField" promptText="Card Number (Part)"/>
+            <TextField fx:id="partNameField" promptText="Наименование (Part)" editable="false"/> <!-- Сделано только для чтения -->
             <TextField fx:id="partQuantityField" promptText="Количество (Part)"/>
-            <TextField fx:id="fluidNameField" promptText="Card Number (Fluid)"/>
+            <TextField fx:id="fluidCardNumberField" promptText="Card Number (Fluid)"/>
+            <TextField fx:id="fluidNameField" promptText="Наименование (Fluid)" editable="false"/> <!-- Сделано только для чтения -->
             <TextField fx:id="fluidVolumeField" promptText="Объем/Вес (Fluid)"/>
             <TextField fx:id="serialNumberField" promptText="Serial Number"/>
-            <TextField fx:id="remainingMileageField" promptText="Remaining Mileage"/>
-            <TextField fx:id="remainingTimeField" promptText="Remaining Time"/>
             <TextField fx:id="orderNumberField" promptText="Order Number"/>
-            <TextArea fx:id="notesField" promptText="Notes"/>
-            <ComboBox fx:id="jobTypeComboBox" promptText="Job Type"/> <!-- Добавлен ComboBox для типа работы -->
+            <TextArea fx:id="notesField" promptText="Notes" editable="false"/> <!-- Сделано только для чтения -->
+            <ComboBox fx:id="jobTypeComboBox" promptText="Job Type"/>
             <CheckBox fx:id="inParkCheckBox" text="Work done in park"/>
         </VBox>
     </right>
@@ -57,7 +59,7 @@
             <Button fx:id="completeJobButton" text="Complete Job" disable="true"/>
             <Button fx:id="addButton" text="Add" onAction="#addPlannedRepairJob"/>
             <Button fx:id="deleteButton" text="Delete" onAction="#deletePlannedRepairJob"/>
-            <Button fx:id="editButton" text="Edit" onAction="#editPlannedRepairJob" disable="true" />
+            <Button fx:id="editButton" text="Edit" onAction="#editPlannedRepairJob" disable="true"/>
         </HBox>
     </bottom>
 </BorderPane>

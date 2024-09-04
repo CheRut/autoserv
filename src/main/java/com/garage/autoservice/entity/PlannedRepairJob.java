@@ -4,7 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.time.LocalDate;
 
 @Entity
 public class PlannedRepairJob {
@@ -13,17 +12,21 @@ public class PlannedRepairJob {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String jobName;
-    private String serialNumber;
+    private String enterpriseNumber;
     private String cardNumber;
     private String fluidType;
     private Long remainingMileage;
-    private LocalDate remainingTime;
+    private String remainingTime;
     private String orderNumber;
     private String notes;
 
-    private int partQuantity;
+    private String PartCardNumber;
 
-    private float fluidVolume;
+
+    private String fluidCardNumber;
+    private Integer partQuantity;
+
+    private Float fluidVolume;
     private boolean inPark;
 
     private String jobType;
@@ -45,12 +48,12 @@ public class PlannedRepairJob {
         this.jobName = jobName;
     }
 
-    public String getSerialNumber() {
-        return serialNumber;
+    public String getEnterpriseNumber() {
+        return enterpriseNumber;
     }
 
-    public void setSerialNumber(String serialNumber) {
-        this.serialNumber = serialNumber;
+    public void setEnterpriseNumber(String serialNumber) {
+        this.enterpriseNumber = serialNumber;
     }
 
     public String getCardNumber() {
@@ -77,11 +80,11 @@ public class PlannedRepairJob {
         this.remainingMileage = remainingMileage;
     }
 
-    public LocalDate getRemainingTime() {
+    public String getRemainingTime() {
         return remainingTime;
     }
 
-    public void setRemainingTime(LocalDate remainingTime) {
+    public void setRemainingTime(String remainingTime) {
         this.remainingTime = remainingTime;
     }
 
@@ -113,9 +116,9 @@ public class PlannedRepairJob {
     public PlannedRepairJob() {
     }
 
-    public PlannedRepairJob(String jobName, String serialNumber, String cardNumber, String fluidType, Long remainingMileage, LocalDate remainingTime, String orderNumber, String notes, boolean inPark) {
+    public PlannedRepairJob(String jobName, String enterpriseNumber, String cardNumber, String fluidType, Long remainingMileage, String remainingTime, String orderNumber, String notes, boolean inPark) {
         this.jobName = jobName;
-        this.serialNumber = serialNumber;
+        this.enterpriseNumber = enterpriseNumber;
         this.cardNumber = cardNumber;
         this.fluidType = fluidType;
         this.remainingMileage = remainingMileage;
@@ -135,7 +138,7 @@ public class PlannedRepairJob {
         if (inPark != that.inPark) return false;
         if (!id.equals(that.id)) return false;
         if (!jobName.equals(that.jobName)) return false;
-        if (!serialNumber.equals(that.serialNumber)) return false;
+        if (!enterpriseNumber.equals(that.enterpriseNumber)) return false;
         if (!cardNumber.equals(that.cardNumber)) return false;
         if (!fluidType.equals(that.fluidType)) return false;
         if (!remainingMileage.equals(that.remainingMileage)) return false;
@@ -148,7 +151,7 @@ public class PlannedRepairJob {
     public int hashCode() {
         int result = id.hashCode();
         result = 31 * result + jobName.hashCode();
-        result = 31 * result + serialNumber.hashCode();
+        result = 31 * result + enterpriseNumber.hashCode();
         result = 31 * result + cardNumber.hashCode();
         result = 31 * result + fluidType.hashCode();
         result = 31 * result + remainingMileage.hashCode();
@@ -164,7 +167,7 @@ public class PlannedRepairJob {
         return "PlannedRepairJob{" +
                 "id=" + id +
                 ", jobName='" + jobName + '\'' +
-                ", serialNumber='" + serialNumber + '\'' +
+                ", serialNumber='" + enterpriseNumber + '\'' +
                 ", cardNumber='" + cardNumber + '\'' +
                 ", fluidType='" + fluidType + '\'' +
                 ", remainingMileage=" + remainingMileage +
@@ -183,19 +186,34 @@ public class PlannedRepairJob {
         this.jobType=jobType;
     }
 
-    public int getPartQuantity() {
+    public Integer getPartQuantity() {
         return partQuantity;
     }
 
-    public void setPartQuantity(int partQuantity) {
+    public void setPartQuantity(Integer partQuantity) {
         this.partQuantity = partQuantity;
     }
 
-    public float getFluidVolume() {
+    public Float getFluidVolume() {
         return fluidVolume;
     }
 
-    public void setFluidVolume(float fluidQuantity) {
+    public void setFluidVolume(Float fluidQuantity) {
         this.fluidVolume = fluidQuantity;
+    }
+
+    public String getFluidCardNumber() {
+        return fluidCardNumber;
+    }
+    public void setFluidCardNumber(String fluidCardNumber) {
+        this.fluidCardNumber = fluidCardNumber;
+    }
+
+    public String getPartCardNumber() {
+        return PartCardNumber;
+    }
+
+    public void setPartCardNumber(String partCardNumber) {
+        PartCardNumber = partCardNumber;
     }
 }

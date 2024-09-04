@@ -30,4 +30,6 @@ public interface RepairJobRepository extends JpaRepository<RepairJob, Long> {
     Optional<RepairJob> findByOrderNumber(String orderNumber);
 
     Optional<RepairJob> findByJobsType(String searchText);
+
+    List<RepairJob> findListBySerialNumber(String serialNumber);
 }

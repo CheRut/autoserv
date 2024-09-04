@@ -66,4 +66,6 @@ public class MaintenanceRecordService {
         logger.info("Удаление записи о выполненной работе: {}", maintenanceRecord);
         maintenanceRecordRepository.delete(maintenanceRecord);
     }
+
+
 }

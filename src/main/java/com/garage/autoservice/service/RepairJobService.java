@@ -242,4 +242,13 @@ public class RepairJobService {
     public Optional<RepairJob> findByJobsType(String searchText) {
         return repairJobRepository.findByJobsType(searchText);
     }
+
+    /**
+     * Метод для поиска всех RepairJob по серийному номеру
+     * @param serialNumber серийный номер автомобиля
+     * @return список ремонтных работ, связанных с данным серийным номером
+     */
+    public List<RepairJob> findListBySerialNumber(String serialNumber) {
+        return repairJobRepository.findListBySerialNumber(serialNumber);
+    }
 }
